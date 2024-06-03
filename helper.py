@@ -2,6 +2,7 @@ import aiosqlite
 import discord
 import random
 from discord.ext import commands
+import hashlib
 
 my_guild = 741447688079540224
 
@@ -224,6 +225,9 @@ async def genprof(uid, aps, bot):
         async with conn.execute("SELECT class_name FROM classes WHERE class_id = ?;", (class_id,)) as class_info:
             class_result = await class_info.fetchone()
             class_name = class_result[0].replace("_", " ").title() if class_result else "Unknown Class"
+        
+        rgb_color = hash_class_name_to_rgb(class_name)
+        color = discord.Color.from_rgb(*rgb_color)
 
         # Fetch the total number of achievements
         async with conn.execute("SELECT COUNT(*) FROM achievements;") as ach_count:
@@ -237,7 +241,7 @@ async def genprof(uid, aps, bot):
     max_xp_value = max_xp(level) 
 
     # Build the profile embed
-    profile = discord.Embed(title=f"{uid.display_name}'s Profile", colour=discord.Colour(0x6eaf0b), description="")
+    profile = discord.Embed(title=f"{uid.display_name}'s Profile", colour=color, description="")
     profile.set_thumbnail(url=uid.display_avatar.url)
     profile.set_footer(text=f"Global Coolness Ranking: {await genrank(uid.id)}", icon_url="")
     profile.add_field(name="Class & Level", value=f"{class_name} ║ Level {level}", inline=False)
@@ -249,6 +253,39 @@ async def genprof(uid, aps, bot):
     profile.add_field(name="Action Points", value=aps.get(uid.id, 0), inline=False)
 
     return profile
+
+def hash_class_name_to_rgb(class_name: str) -> tuple:
+    """
+    Convert a class name to an RGB color using a hash function.
+
+    :param class_name: The name of the class.
+    :return: A tuple representing the RGB color.
+    """
+    # Create a hash object
+    # This converts the text into bytes, with encode.
+    # Then, hashlib turns it into a hash.
+    # For example, the md5 can be 5d93ceb70e2a49e19a95b8a92989129b
+    hash_object = hashlib.md5(class_name.encode())
+    
+    # Get the hexadecimal hash value
+    # The hexdigest() method then gives a hexadecimal representation of this hash.
+    # Basically, a 32-character hexadecimal string.
+    hex_dig = hash_object.hexdigest()
+
+    # Convert the first 6 characters of the hash to RGB values
+    # When you convert a hexadecimal number to a decimal (base 10) number, 
+    # you multiply each digit by 16 raised to the power of its position (starting from 0 on the right).
+    # We can accomplish this by doing int(x, 16) apparently.
+
+    # This works because, guess what - RGB values are built for Hexadecimal! Each hexidecimal value is one byte (which is 0 - 255)
+    # Since the maximum value for a two-digit hexadecimal number is FF (255 in decimal), 
+    # the resulting RGB values will always be within the 0-255 range, which is valid for RGB color representation. Pretty cool.
+    # This is why red, for example, is also #FF0000 (255/FF 0/00 0/00)
+    r = int(hex_dig[0:2], 16)
+    g = int(hex_dig[2:4], 16)
+    b = int(hex_dig[4:6], 16)
+
+    return (r, g, b)
 
 async def add_coolness(user_id, coolness_amount):
     """

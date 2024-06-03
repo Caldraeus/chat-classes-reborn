@@ -239,18 +239,24 @@ class class_core(commands.Cog):
                     return
                 class_name = class_name[0]
 
-            # Fetch class details including achievement locks and previous class
+            # Fetch class details including achievement locks, previous class, and image URL
             cursor = await db.execute("""
-                SELECT classes.class_name, classes.class_description, classes.commands, classes.previous_class_id, classes.ach_lock, achievements.name
+                SELECT classes.class_name, classes.class_description, classes.commands, classes.previous_class_id, 
+                    classes.ach_lock, achievements.name, classes.image_url
                 FROM classes
                 LEFT JOIN achievements ON classes.ach_lock = achievements.achievement_id
                 WHERE class_name = ?;
             """, (class_name,))
             class_info = await cursor.fetchone()
+
+            # Convert class name to RGB color
+            rgb_color = h.hash_class_name_to_rgb(class_name)
+            color = discord.Color.from_rgb(*rgb_color)
+
             if class_info:
-                class_name, description, commands, previous_class_id, ach_lock, achievement_name = class_info
+                class_name, description, commands, previous_class_id, ach_lock, achievement_name, image_url = class_info
                 # Build the embed
-                embed = discord.Embed(title=f"Class: {class_name}", description=description, color=discord.Color.blue())
+                embed = discord.Embed(title=f"Class: {class_name}", description=description, color=color)
                 if commands:
                     commands_list = commands.split('|')
                     embed.add_field(name="Commands", value='\n'.join(commands_list), inline=False)
@@ -271,9 +277,14 @@ class class_core(commands.Cog):
                 if ach_lock:
                     embed.set_footer(text=f"Unlock Requirement: {achievement_name}")
 
+                # Set the thumbnail if image_url is present and not null
+                if image_url:
+                    embed.set_thumbnail(url=image_url)
+
                 await interaction.response.send_message(embed=embed)
             else:
                 await interaction.response.send_message("Class not found.", ephemeral=True)
+
 
 
 # A setup function the every cog has
