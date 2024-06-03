@@ -7,21 +7,6 @@ import aiosqlite
 class owner_only(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.command()
-    @commands.is_owner()
-    async def regenhps(self, ctx):
-        async with aiosqlite.connect('data/game.db') as db:
-            async with db.execute('SELECT user_id, class_name, constitution FROM Character_Stats INNER JOIN classes ON Character_Stats.class_id = classes.class_id') as cursor:
-                async for row in cursor:
-                    user_id = row[0]
-                    class_name = row[1]
-                    con = row[2]
-                    print(f"User {user_id} is a {class_name}")
-                    await db.execute('UPDATE Character_Stats SET MAXHP = ? WHERE user_id = ?', (h.calc_base_hp(class_name, int(con)), user_id,))
-            await db.commit()
-
-        await ctx.send("Fixed the stupid hp thing")
     
     @commands.command()
     @commands.is_owner()
@@ -48,19 +33,60 @@ class owner_only(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def sync(self, ctx):
-        await self.bot.tree.sync(guild=discord.Object(784842140764602398))
-        await ctx.send("Commands synchronized.")
+        await ctx.send("Syncing commands to the specific guild...")
+        await self.bot.tree.sync(guild=discord.Object(id=741447688079540224))  # Ensure to use `id=` for clarity
+        await ctx.send("Commands synchronized locally. Run ;globalsync for full tree sync.")
 
     @commands.command()
     @commands.is_owner()
-    async def parse(self, ctx, *, message):
-        await ctx.send(h.parse_rfp(message))
+    async def globalsync(self, ctx):
+        await ctx.send("Syncing...")
+        await self.bot.tree.sync()
+        await ctx.send("Commands sync'd globally. This will take some time to be visible.")
+        
 
     @commands.command()
     @commands.is_owner()
     async def say(self, ctx, *, message):
         await ctx.message.delete()
         await ctx.send(message)
+
+    @commands.command()
+    @commands.guild_only()
+    @commands.is_owner()
+    async def fquest(self, ctx, target: discord.User = None):
+        if target: # message, bot, uid=None, override=False
+            await self.bot.quest_manager.fetch_random_quest(ctx.message, target.id)
+        else:
+            await ctx.send("Fetching a quest.")
+            await self.bot.quest_manager.fetch_random_quest(ctx.message)
+
+    @commands.command()
+    @commands.is_owner()
+    async def force_complete(self, ctx, user: discord.Member):
+        """
+        Force completes the current quest for a specified user.
+
+        :param ctx: The command context.
+        :param user: The Discord member whose quest is to be completed.
+        """
+        user_id = user.id
+        channel_id = ctx.channel.id  # We will send the completion message to the context's channel
+        async with aiosqlite.connect('data/main.db') as conn:
+            # Fetch the current active quest for the user
+            cursor = await conn.execute("""
+                SELECT quest_id FROM user_quest_progress WHERE user_id = ?;
+            """, (user_id,))
+            result = await cursor.fetchone()
+            if result:
+                quest_id = result[0]
+                # Use the QuestManager to complete the quest
+                await self.bot.quest_manager.complete_quest(conn, user_id, quest_id, channel_id)
+                await ctx.send(f"✅ Quest for {user.display_name} has been forcefully completed.")
+            else:
+                await ctx.send("❌ No active quest found for this user.")
+
+
 
 # A setup function the every cog has
 async def setup(bot):
