@@ -1,45 +1,65 @@
 import discord
 from discord.ext import commands
+import aiosqlite
+import helper as h
+import json
 
-class RPGCommands(commands.Cog):
+class action_core(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         # Initialize the dispatch dictionary
-        self.action_dispatch = {
-            ('cultist', 'pray'): self.cultist_pray,
-            ('cultist', 'tether'): self.cultist_tether,
-            # Add other class and action combinations
-        }
+        # self.action_dispatch = {
+        #     ('apprentice', 'attack'): self.basic_attack,
+        #     ('swordsman', 'attack'): self.basic_attack,
+        #     ('archer', 'attack'): self.basic_attack,
+        #     ('rogue', 'attack'): self.basic_attack
+        #     # Add other class and action combinations
+        # }
+        with open('data/class_hooks.json', "r") as f:
+            self.class_hooks = json.loads(f.read())
 
-    @discord.app_commands.command(name="action")
-    @discord.app_commands.describe(
-        action_type="The type of action to perform.",
-        target1="The optional primary target for the action.",
-        target2="An optional secondary target for the action."
-    )
-    async def action(self, interaction: discord.Interaction, action_type: str, 
-                     target1: discord.Member = None, target2: discord.Member = None):
-        """Perform an action based on your class and the specified type."""
-        user_class = self.bot.users_classes.get(str(interaction.user.id), 'default_class')
-        action_key = (user_class, action_type)
-
-        if action_key in self.action_dispatch:
-            await self.action_dispatch[action_key](interaction, target1, target2)
+    @discord.app_commands.command(name="action", description="Perform an action, optionally targeting another user.")
+    @discord.app_commands.describe(action="The action you want to perform.")
+    @discord.app_commands.describe(target="Optional target user for the action.")
+    async def action(self, interaction: discord.Interaction, action: str, target: discord.Member = None):
+        # Handle the action based on the selected command and target
+        if target:
+            response = f"{action.capitalize()} targeting {target.display_name} performed!"
         else:
-            await interaction.response.send_message(f"{action_type} is not a valid action for your class or is incorrectly specified.", ephemeral=True)
+            response = f"{action.capitalize()} performed!"
 
-    async def cultist_pray(self, interaction, target1, target2):
-        # Specific logic for cultist praying
-        await interaction.response.send_message("You pray fervently, invoking dark energies.", ephemeral=True)
+        await interaction.response.send_message(response)
 
-    async def cultist_tether(self, interaction, target1, target2):
-        if target1 and target2:
-            # Specific logic for cultist tethering two souls
-            await interaction.response.send_message(f"You tether the souls of {target1.display_name} and {target2.display_name}.", ephemeral=True)
-        else:
-            await interaction.response.send_message("Tethering requires two targets.", ephemeral=True)
+    @action.autocomplete('action')
+    async def action_autocomplete(self, interaction: discord.Interaction, current: str):
+        user_id = interaction.user.id
+        actions = await self.fetch_available_actions(user_id)
+        return [discord.app_commands.Choice(name=action, value=action) for action in actions if current.lower() in action.lower()]
 
-    # Define other handlers similarly
+    async def fetch_available_actions(self, user_id):
+        async with aiosqlite.connect('data/main.db') as db:
+            # Fetch the user's class ID based on user ID
+            cursor = await db.execute("SELECT class_id FROM users WHERE user_id = ?", (user_id,))
+            class_info = await cursor.fetchone()
+            if class_info:
+                class_id = class_info[0]
+                # Fetch the commands for the class
+                cursor = await db.execute("SELECT commands FROM classes WHERE class_id = ?", (class_id,))
+                commands_data = await cursor.fetchone()
+                if commands_data:
+                    return self.process_commands(commands_data[0])
+            return []
+
+    def process_commands(self, commands_str):
+        # Split the commands and process each to remove parameters and only leave the action description
+        commands = commands_str.split('|')
+        processed_commands = []
+        for command in commands:
+            # Simplifying command strings, e.g., remove parameters and details not needed for autocomplete
+            if "(" in command:
+                command = command[:command.index("(")].strip()
+            processed_commands.append(command.replace("/action ", "").strip())
+        return processed_commands
 
 async def setup(bot):
-    await bot.add_cog(RPGCommands(bot))
+    await bot.add_cog(action_core(bot))

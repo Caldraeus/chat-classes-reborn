@@ -192,6 +192,23 @@ class class_core(commands.Cog):
                     # Send a confirmation message to the user
                     await interaction.response.send_message(f"You are now {lead} {clss}! Your adventure starts here!", ephemeral=True)
 
+    async def autocomplete_class_names(self, interaction: discord.Interaction, current: str):
+        """Autocomplete function that provides class name suggestions."""
+        async with aiosqlite.connect('data/main.db') as db:
+            cursor = await db.execute("SELECT class_name FROM classes WHERE class_name LIKE ?", (f'%{current}%',))
+            class_names = await cursor.fetchall()
+            return [discord.app_commands.Choice(name=cls[0], value=cls[0]) for cls in class_names]
+        
+    @app_commands.command(name="origin")
+    @discord.app_commands.describe(
+        class_name="The class you wish to find the origin of."
+    )
+    @app_commands.autocomplete(class_name=autocomplete_class_names)
+    async def class_origin(self, interaction: discord.Interaction, class_name: str = None) -> None:
+        """Find the path to become a certain class."""
+        origin_str = await h.find_origin(class_name)
+        await interaction.response.send_message(f"🔍 | To become a {class_name}, you have to take the following path.\n**{origin_str}**", ephemeral=True)
+
     @app_commands.command(name="profile")
     @discord.app_commands.describe(
         user="The user who's profile you wish to view."
@@ -209,13 +226,6 @@ class class_core(commands.Cog):
         except TypeError:
             await interaction.response.send_message("User does not have a profile! Run `/start` to get one!", ephemeral=True)
 
-        
-    async def autocomplete_class_names(self, interaction: discord.Interaction, current: str):
-        """Autocomplete function that provides class name suggestions."""
-        async with aiosqlite.connect('data/main.db') as db:
-            cursor = await db.execute("SELECT class_name FROM classes WHERE class_name LIKE ?", (f'%{current}%',))
-            class_names = await cursor.fetchall()
-            return [discord.app_commands.Choice(name=cls[0], value=cls[0]) for cls in class_names]
         
     @app_commands.command(name="class-info", description="Displays detailed information about a class.")
     @app_commands.describe(class_name="Name of the class to get information about.")

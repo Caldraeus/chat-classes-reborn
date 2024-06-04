@@ -3,8 +3,11 @@ import discord
 import random
 from discord.ext import commands
 import hashlib
+import math
 
 my_guild = 741447688079540224
+
+body_parts = ['bones', 'hair', 'fingernail', 'thumb', 'middle finger', 'big toe', 'knees', 'kneecap', 'bum', 'cheek', 'bumcheek', 'leg hair', 'skeleton', 'ligaments', 'muscles', 'tendons', 'teeth', 'mouth', 'tongue', 'larynx', 'esophagus', 'stomach', 'small intestine', 'large intestine', 'liver', 'gallbladder', 'mesentery', 'pancreas', 'anus', 'nasal cavity', 'pharynx', 'larynx', 'trachea', 'lungs', 'diaphragm', 'groin', 'kidneys', 'heart', 'spleen', 'thymus', 'brain', 'cerebellum', 'spine', 'eye', 'ear', 'arm', 'leg', 'chest', 'neck', 'toe', 'finger']
 
 # conn = sqlite3.connect('data/game.db')
 # class_data = conn.execute("SELECT * FROM classes;")
@@ -74,11 +77,12 @@ async def remove_item(user_id, item_id, amount=1):
             await conn.commit()
 
 
-async def channel_check(channel_id):
+async def channel_check(channel_id) -> bool:
     """
     Check if a channel is disabled.
 
     :param int channel_id: The channel id. 
+    :return bool: Boolean value representing whether or not a channe is blacklisted or not.
     """
     async with aiosqlite.connect('data/main.db') as db:
         cursor = await db.execute("SELECT 1 FROM servers WHERE channel_id = ?", (channel_id,))
@@ -89,11 +93,12 @@ async def channel_check(channel_id):
         else:
             return True
         
-def ordinal(n):
+def ordinal(n) -> str:
     """
     Return the ordinal number of a given integer, as a string.
     
-    :param n: The number.
+    :param n: The number to generate a suffix for.
+    :return str: The ordinal suffix for the given number n.
     """
     if 10 <= n % 100 <= 20:
         suffix = 'th'
@@ -154,19 +159,21 @@ async def grant_achievement(channel, user, achievement_id):
 
         await db.commit()
 
-def max_xp(lvl):
+def max_xp(lvl) -> int:
     """
     Math to generate the maximum XP required for a level.
 
     :param int lvl: The level to calculate experience for.
+    :return: Integer representing the maximum xp for the given level.
     """
     return 20 * (lvl ^ 35) + 250 * lvl + 25
 
-async def genrank(uid):
+async def genrank(uid) -> int:
     """
     Generate the user's rank based on their coolness.
 
     :param int uid: User's ID
+    :return rank: The numerical value of a user's position on the leaderboard.
     """
     async with aiosqlite.connect('data/main.db') as con:
         async with con.execute("SELECT * FROM users ORDER BY coolness DESC;") as lb:
@@ -180,7 +187,7 @@ async def genrank(uid):
             
             return rank
         
-async def user_exists(user_id):
+async def user_exists(user_id) -> bool:
     """
     Check if a user exists in the database.
     
@@ -189,14 +196,15 @@ async def user_exists(user_id):
     async with aiosqlite.connect('data/main.db') as db:
         cursor = await db.execute("SELECT 1 FROM users WHERE user_id = ?", (user_id,))
         exists = await cursor.fetchone()
-        return bool(exists)
+    return bool(exists)
 
-def paginate(items, page_size):
+def paginate(items, page_size) -> list:
     """
     Paginates a list of items.
 
     :param list items: The list of items to paginate.
     :param int page_size: The number of items to show on each page.
+    :return list: Pages of items created from given page size/list.
     """
     pages = [items[i:i + page_size] for i in range(0, len(items), page_size)]
     return pages
@@ -259,7 +267,7 @@ def hash_class_name_to_rgb(class_name: str) -> tuple:
     Convert a class name to an RGB color using a hash function.
 
     :param class_name: The name of the class.
-    :return: A tuple representing the RGB color.
+    :return: A tuple representing the RGB color (r,g,b).
     """
     # Create a hash object
     # This converts the text into bytes, with encode.
@@ -336,6 +344,42 @@ async def add_xp(user_id, xp_amount):
         """, (xp_amount, user_id))
         await conn.commit()
 
+async def find_origin(user_class):
+    """
+    Finds the origin of the given user class by tracing back its lineage to a base class.
+    
+    :param user_class: The class name to trace back.
+    :return: A string representing the path from the origin class to the given class.
+    """
+    async with aiosqlite.connect('data/main.db') as conn:
+        # Fetch class names and their previous class IDs
+        async with conn.execute("SELECT class_name, class_id, previous_class_id FROM classes") as cursor:
+            clss = await cursor.fetchall()
+
+    # Create dictionaries for quick lookup
+    id_to_name = {item[1]: item[0] for item in clss}
+    name_to_previous_id = {item[0]: item[2] for item in clss}
+
+    path = [user_class.title()]
+    current_id = name_to_previous_id.get(user_class.title())
+
+    # Trace back the lineage using previous class IDs
+    iterations = 0
+    while current_id and iterations < 10:
+        iterations += 1
+        previous_class_name = id_to_name.get(current_id)
+        if previous_class_name:
+            path.append(previous_class_name)
+            current_id = name_to_previous_id.get(previous_class_name)
+        else:
+            break
+
+    if iterations >= 10:
+        path.append("Unknown")  # Failsafe to handle potential circular references / excessive depth
+
+    path.reverse()
+    return ' ➔ '.join(path)
+
 class QuestManager:
     def __init__(self, db_path, bot):
         """
@@ -359,7 +403,7 @@ class QuestManager:
             # Exit if user does not exist.
             return
 
-        async with aiosqlite.connect('data/main.db') as conn:
+        async with aiosqlite.connect(self.db_path) as conn:
             # Check if the user already has an active quest
             cursor = await conn.execute("""
                 SELECT 1 FROM user_quest_progress WHERE user_id = ?
@@ -434,14 +478,14 @@ class QuestManager:
         await self.bot.get_channel(mss.channel.id).send(content=mss.author.mention, embed=embed, delete_after=10)
 
 
-    async def get_quest_type(self, user_id):
+    async def get_quest_type(self, user_id) -> str:
         """
         Retrieves the action type of the current active quest for a specified user.
 
         :param user_id: ID of the user.
-        :return: The action type of the current active quest, or None if no active quest exists.
+        :return str: The action type of the current active quest, or None if no active quest exists.
         """
-        async with aiosqlite.connect('data/main.db') as conn:
+        async with aiosqlite.connect(self.db_path) as conn:
             # Query to fetch the action type of the active quest based on the user's current quest progress
             cursor = await conn.execute("""
                 SELECT qo.action_type
@@ -550,6 +594,16 @@ class QuestManager:
             await add_gold(user_id, reward_value)
         elif reward_type == 'xp':
             await add_xp(user_id, reward_value)
+        elif reward_type == 'item':
+            # TODO: Implement this reward value.
+            pass
+        elif reward_type == 'achievement':
+            # TODO: implement this reward value.
+            # NOTE: Probably shouldn't reward achievements on `randomly_obtainable` quests.
+            pass
+        elif reward_type == 'status':
+            # TODO: Implement this reward value.
+            pass
 
         # Reopen the connection to handle follow-up quests
         async with aiosqlite.connect(self.db_path) as conn:
@@ -575,13 +629,13 @@ class QuestManager:
         embed.set_footer(text=f"Great job, {self.bot.get_user(user_id).display_name}!")
         await self.bot.get_channel(channel_id).send(embed=embed, delete_after=10)
     
-async def webhook_safe_check(channel):
+async def webhook_safe_check(channel) -> str:
     """
     Ensures that a valid webhook exists for the given channel. If a webhook does not exist, it creates a new one
     and stores it in the database before returning the webhook URL.
 
     :param channel (discord.TextChannel): The channel for which to check or create a webhook.
-    :return: The URL of the webhook for the specified channel.
+    :return str: The URL of the webhook for the specified channel.
     """
     async with aiosqlite.connect('data/main.db') as conn:
         # Check for existing webhook in the database
@@ -607,3 +661,19 @@ async def webhook_safe_check(channel):
         except Exception as e:
             print(f"Failed to create webhook: {e}")
             raise
+
+magnitudeDict={0:'', 1:'Thousand', 2:'Million', 3:'Billion', 4:'Trillion', 5:'Quadrillion', 6:'Quintillion', 7:'Sextillion', 8:'Septillion', 9:'Octillion', 10:'Nonillion', 11:'Decillion'}
+
+def simplify(num) -> str:
+    """
+    A function to simplify a large number.
+
+    :param int num: The number to return a format string for.
+    :return str: The simplified large number.
+    """
+    num=math.floor(num)
+    magnitude=0
+    while num>=1000.0:
+        magnitude+=1
+        num=num/1000.0
+    return(f'{math.floor(num*100.0)/100.0} {magnitudeDict[magnitude]}')
