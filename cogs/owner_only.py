@@ -86,6 +86,17 @@ class owner_only(commands.Cog):
             else:
                 await ctx.send("❌ No active quest found for this user.")
 
+    @commands.command(name="change_class")
+    @commands.is_owner()
+    async def change_class(self, ctx, user: discord.Member, class_name: str):
+        try:
+            await h.alter_class(user, class_name)
+            await ctx.send(f"✅ Class for {user.display_name} has been changed to {class_name}.")
+        except ValueError as ve:
+            await ctx.send(str(ve))
+        except Exception as e:
+            await ctx.send(f"❌ Failed to change class: {e}")
+
 
 
 # A setup function the every cog has

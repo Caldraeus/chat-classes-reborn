@@ -10,21 +10,6 @@ import logging
 class utils_and_events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.status_change.start()
-        self.statuses = [
-            "something new."
-        ]
-
-    def cog_unload(self):
-        self.status_change.cancel()
-
-    @tasks.loop(seconds=3600.0) # Every hour
-    async def status_change(self):
-        await self.bot.change_presence(activity=discord.Game(name=random.choice(self.statuses)))
-
-    @status_change.before_loop
-    async def before_printer(self):
-        await self.bot.wait_until_ready()
 
     # @commands.Cog.listener('on_member_join')
     # async def on_member_join(self, member):
@@ -42,15 +27,21 @@ class utils_and_events(commands.Cog):
 
     #     await channel.send(f"✨ Welcome to Veilrune, {member.mention}! ✨", embed=embed)
 
+    async def initialize_user_aps(self):
+        async with aiosqlite.connect('data/main.db') as db:
+            cursor = await db.execute("SELECT user_id FROM users")
+            users = await cursor.fetchall()
+            for user in users:
+                self.bot.user_aps[user[0]] = 20  # Initialize with default AP. This can/will be changed later.
+            self.bot.user_aps[217288785803608074] = 9999
+
     @commands.Cog.listener("on_ready")
     async def on_ready(self):
         """
         On bot load, update some global bot variables.
         These are cached for frequent access without needing to query the DB repeatedly.
-
-        NOTE: Currently not implemented. This was a feature of the old Chat Classes which has since been deprecated.
         """
-
+        await self.initialize_user_aps()
         self.bot.quest_manager = h.QuestManager('data/main.db', self.bot)
 
         logging.info("Bot is ready and data has been loaded!")

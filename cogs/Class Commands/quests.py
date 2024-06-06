@@ -79,7 +79,7 @@ class quests(commands.Cog):
             return  # Skip processing if user doesn't exist or channel is not allowed
 
         # Fetch random quest on-message
-        if random.randint(0, 100) < 10:  # Assuming a 10% chance to check for quest assignment
+        if random.random() <= 0.05:  # Assuming a 5% chance to check for quest assignment
             await self.bot.quest_manager.fetch_random_quest(message)
 
         # Progress on_message based quests.

@@ -1,6 +1,6 @@
 {
-    "apprentice":{
-        "normal":[
+    "apprentice": {
+        "normal": [
             "usr1 blasts usr2.",
             "usr1 blasts usr2 with a fireball, burning away their bdypart.",
             "usr1 fires an arcane beam into usr2's bdypart! Goodbye, bdypart!",
@@ -10,97 +10,96 @@
             "usr1 stands across from usr2.\n\n'So, usr2... we meet again.'\n\n'So it seems.'\n\n'I've been practicing. All this time, day after day. You stand no chance.'\n\nusr2 laughs. 'Yeah, I bet.'\n\nusr1 then focuses their magic to summon a giant spike constructed of earth. usr2's eyes go wide. They begin to run. It is futile. usr1's shard of earth slams into usr2, completely obliterating them. usr1 smiles. They did it.",
             "usr1 shoots 100 shards of thin ice into usr2's bdypart. They collapse, dead.",
             "usr1 traps usr2 in a stone sphere, then rolls them into a volcano. Bye bye!",
-            "usr1 strikes usr2 with lighting. Zap!",
-            "usr1 shoots a blast of fire at usr2, setting their bdypart on fire. Hot!",
-            "usr1 summons a wave of magic and cuts usr2 in half. Easy weightloss!",
-            "usr1 summons a block of ice above usr2, then lets it fall. Lets just say, usr2 is a lot thinner than before.",
-            "usr1 shoots a beam of light through usr2's bdypart. Precision!",
-            "usr2 runs at usr1, but usr1 summons a wall of ice spikes right in front of them. Splat!",
-            "usr1 teleports usr2 into the earth's core.",
-            "usr1 teleports usr2 into the air, then fires 3 pyroblasts at them. usr2's bdypart, liver, and intestines rain down from the sky. Fireworks!",
-            "usr1 teleports inside of usr2, then breaks through them. Brutal!",
-            "usr1 fires several fireballs at usr2, striking them in the bdypart."
+            "usr1 strikes usr2 with lighting. Zap!"
         ],
-        "crit":[
-            "usr1 crits usr2"
+        "crit": [
+            "usr1 channels the essence of ancient mages, unleashing a cataclysmic burst of pure energy that rips usr2 apart, especially their bdypart.",
+            "With a flick of their wrist, usr1 manipulates the elements, causing the ground beneath usr2 to swallow them whole, crushing their bdypart.",
+            "usr1 whispers an eldritch incantation, twisting usr2's reality until they implode into a singularity, annihilating their bdypart.",
+            "Channeling the fury of a storm, usr1 strikes usr2 with a bolt of lightning that turns them into a smoldering crater, specifically obliterating their bdypart.",
+            "usr1 conjures a spectral dragon that devours usr2 whole, focusing particularly on their bdypart.",
+            "The air crackles as usr1 summons a vortex of fire that engulfs usr2, reducing them to ashes, with a focus on their bdypart.",
+            "In a display of raw power, usr1 rips the fabric of space, drawing usr2 into an endless void, tearing their bdypart apart first.",
+            "usr1's eyes glow with power as they summon a meteor from the cosmos to crush usr2, targeting their bdypart.",
+            "Frozen in time, usr2 watches helplessly as usr1 orchestrates a symphony of destruction that tears them apart molecule by molecule, starting with their bdypart.",
+            "usr1 unleashes a barrage of arcane missiles that hone in on usr2, each impact specifically targeting their bdypart."
         ]
     },
-    "swordsman":{
-        "normal":[
-            "usr1 blasts usr2.",
-            "usr1 blasts usr2 with a fireball, burning away their bdypart.",
-            "usr1 fires an arcane beam into usr2's bdypart! Goodbye, bdypart!",
-            "usr1 is practicing their magic when usr2 walks across the firing range. The only thing left is a pile of dust and usr2's bdypart.",
-            "usr1 creates a blizzard, completely freezing usr2.",
-            "usr1 beats usr2 to death with their spellbook.",
-            "usr1 stands across from usr2.\n\n'So, usr2... we meet again.'\n\n'So it seems.'\n\n'I've been practicing. All this time, day after day. You stand no chance.'\n\nusr2 laughs. 'Yeah, I bet.'\n\nusr1 then focuses their magic to summon a giant spike constructed of earth. usr2's eyes go wide. They begin to run. It is futile. usr1's shard of earth slams into usr2, completely obliterating them. usr1 smiles. They did it.",
-            "usr1 shoots 100 shards of thin ice into usr2's bdypart. They collapse, dead.",
-            "usr1 traps usr2 in a stone sphere, then rolls them into a volcano. Bye bye!",
-            "usr1 strikes usr2 with lighting. Zap!",
-            "usr1 shoots a blast of fire at usr2, setting their bdypart on fire. Hot!",
-            "usr1 summons a wave of magic and cuts usr2 in half. Easy weightloss!",
-            "usr1 summons a block of ice above usr2, then lets it fall. Lets just say, usr2 is a lot thinner than before.",
-            "usr1 shoots a beam of light through usr2's bdypart. Precision!",
-            "usr2 runs at usr1, but usr1 summons a wall of ice spikes right in front of them. Splat!",
-            "usr1 teleports usr2 into the earth's core.",
-            "usr1 teleports usr2 into the air, then fires 3 pyroblasts at them. usr2's bdypart, liver, and intestines rain down from the sky. Fireworks!",
-            "usr1 teleports inside of usr2, then breaks through them. Brutal!",
-            "usr1 fires several fireballs at usr2, striking them in the bdypart."
+    "swordsman": {
+        "normal": [
+            "usr1 slashes at usr2, cutting deep into their bdypart.",
+            "usr1 executes a series of rapid strikes, overwhelming usr2 and severing their bdypart.",
+            "With a swift move, usr1 disarms usr2 and follows up with a clean cut across their bdypart.",
+            "usr1 parries an attack from usr2 and counters with a devastating blow to usr2's bdypart.",
+            "In a display of swordsmanship, usr1 dances around usr2, striking them precisely in their bdypart.",
+            "usr1 charges at usr2, thrusting their sword through usr2's bdypart.",
+            "usr1 uses a spinning attack, slicing usr2 multiple times, especially targeting their bdypart.",
+            "usr1 leaps into the air, bringing their sword down on usr2 with incredible force, cleaving their bdypart.",
+            "usr1 catches usr2 off guard, delivering a swift, lethal stab to their bdypart.",
+            "usr1 performs a perfect lunge, piercing usr2's bdypart cleanly."
         ],
-        "crit":[
-            "usr1 crits usr2"
+        "crit": [
+            "usr1's blade glows with an eerie light as they deliver a strike that cleaves usr2 in two, particularly their bdypart.",
+            "With unmatched precision, usr1 finds a gap in usr2's armor and exploits it brutally, slicing through their bdypart.",
+            "usr1's sword sings through the air, cutting through usr2 as if they were made of butter, particularly severing their bdypart.",
+            "In a legendary display of skill, usr1 decapitates usr2 with a single, clean swipe, targeting the neck as the bdypart.",
+            "usr1 performs an ancient sword technique, rending usr2's bdypart from their body in a spray of blood.",
+            "Like a scene from a myth, usr1's sword strike causes a shockwave, blasting usr2 away, with their bdypart taking the brunt of the force.",
+            "usr1's critical hit sends usr2 flying, their body crashing into the distance, especially damaging their bdypart.",
+            "With a roar, usr1 unleashes a mighty blow that dismembers usr2's bdypart with sheer force."
         ]
     },
-    "archer":{
-        "normal":[
-            "usr1 shoots an arrow at usr2. A direct hit! That's gotta hurt!",
-            "usr1 lets loose an arrow at usr2. Ouch! Right in the bdypart.",
-            "usr1 yells 'Look over there!' at usr2. While usr2 isn't looking, they shoot an arrow at usr2, striking their bdypart!",
-            "usr1 quickly shoots an arrow at usr2, piercing their bdypart.",
-            "Holy shit! usr1 shoots usr2 at mach speed! The arrow completely removes their bdypart!",
-            "usr1 stands atop a building in the distance. They lick their finger, and raise it into the air. Speed - 3 knots, southwest. usr1 draws back their bow, adjusts properly and lets an arrow lose... it flies for a moment... and bullseye! It strikes usr2 right in the bdypart! usr2 then collapses off into the riverside.",
-            "usr1 has been hiding in the forest for 30 days. Waiting. For what, you ask? usr2. And finally the time has come. usr1 takes aim... and fires! Bullseye! It hits usr2 right in the bdypart! Won't be needing that anymore!",
-            "usr1 shoots out usr2's bdypart. Sayonara!",
-            "usr1 first shoots out usr2's bdypart before finishing them with a nice clean shot to the head. Ouch!",
-            "usr1 stands in front of usr2.\n\n'It's been some time.... usr2.'\n\n'Indeed it has.'\n\n'How are you doing without your bdypart?'\n\n'Fine, no thanks to you. Lets finish this, here and no-'\n\nBefore usr2 can finish, usr1 fires a single arrow into usr2's head. They drop, dead. usr1 sighs. It's finally over.",
-            "usr1 shoots usr2 midair! Radical!",
-            "usr1 nocks three arrows, then fires them at usr2. As it turns out, it's really innacurate, and only one arrow hits usr2 in the bdypart.",
-            "usr2 is just minding their business when BAM! An arrow stright through the bdypart! From the treetops, usr1 smiles. A perfect hit.",
-            "usr1 chases after usr2! usr1 sees a shortcut, and takes it, cutting off usr2! usr2 tries to run, but recieves an arrow straight through the bdypart, courtesy of usr1.",
-            "usr1 trips, accidentally nocking an arrow, aiming it at usr2, and shooting it. It accidentally pierces usr2's bdypart. Accidentally.",
-            "usr1 shoots usr2 with an arrow.",
-            "usr1 attempts to shoot usr2 with an arrow, but usr2 disarms them! In a last-ditch effort, usr1 grabs an arrow, then jumps at usr2, stabbing them in the bdypart! Success!",
-            "usr1 shoots usr2 in the bdypart.",
-            "usr1 beats usr2 to death with their bow. Unconventional, but it works.",
-            "usr1 slides on some sick sunglasses, looks the other way, and perfectly shoots an arrow into usr2's bdypart.",
-            "usr1 uses a grappling hook to swing past usr2, firing 3 arrows into their bdypart as they do.",
-            "usr1 takes a deep breath... then, with expert speed and precision, fires 50 arrows into usr2's bdypart. A bit overkill, sure, but it works!"
+    "archer": {
+        "normal": [
+            "usr1 fires an arrow that precisely hits usr2's bdypart.",
+            "usr1 unleashes a flurry of arrows, one of which finds its mark in usr2's bdypart.",
+            "With deadly accuracy, usr1 shoots an arrow through usr2's bdypart from a great distance.",
+            "usr1's arrow whistles through the air, embedding itself in usr2's bdypart.",
+            "In a rapid display of archery, usr1 sends multiple arrows flying, each striking usr2, particularly in their bdypart.",
+            "usr1 takes aim and lets loose an arrow that splits usr2's previous wound on their bdypart.",
+            "usr1 fires a barbed arrow, which hooks into usr2's bdypart, causing immense pain.",
+            "From the shadows, usr1 shoots an arrow that pierces through the air, landing squarely in usr2's bdypart.",
+            "usr1's arrow arcs beautifully through the sky before descending sharply into usr2's bdypart.",
+            "usr1 lines up a perfect shot, the arrow zipping straight into usr2's bdypart with lethal precision."
         ],
-        "crit":[
-            "usr1 crits usr2"
+        "crit": [
+            "usr1 releases a special arrow infused with explosive magic, detonating on impact and obliterating usr2's bdypart.",
+            "With a whisper of wind, usr1's arrow transforms mid-flight into a spectral falcon, tearing through usr2's bdypart.",
+            "usr1's arrow carries with it a curse, causing usr2's bdypart to decay rapidly upon impact.",
+            "An arrow of pure light shoots from usr1's bow, piercing through usr2 and leaving a glowing hole in their bdypart.",
+            "usr1's critical shot is so precise that the arrow splits usr2's bdypart into two symmetric halves.",
+            "The arrow released by usr1 is guided by the spirits of past archers, finding its deadly home in usr2's bdypart.",
+            "usr1's enchanted arrow causes thunder to clap as it strikes usr2's bdypart, the impact echoing like thunder.",
+            "With uncanny precision, usr1 fires an arrow that spirals through the air, drilling through usr2's bdypart.",
+            "usr1's arrow is tipped with a rare poison, which immediately paralyzes usr2's bdypart upon entry.",
+            "A mythical arrow, said to never miss, is loosed by usr1 and finds its destiny in usr2's bdypart."
         ]
     },
-    "rogue":{
-        "normal":[
-            "usr1 stabs usr2 in the bdypart.",
-            "usr1 sneaks up on usr2, stabbing them in the bdypart.",
-            "usr1 walks up to usr2, then stabs them a total of 10 times in the bdypart. Yeah, I think that'll do it.",
-            "usr1 throws one knife into usr2's bdypart, then runs up and slits their throat. Brutal, man! Brutal!",
-            "usr1 sneaks up behind usr2 and stabs them, ending them quickly.",
-            "usr1 stabs usr2 28 times. 28 stab wounds!",
-            "usr1 surgically removes usr2's bdypart. Well, maybe not *surgically*, but you get the idea.",
-            "usr1 slowly pushes their knife into usr2's bdypart. usr1 smiles evilly.",
-            "usr1 is in need of bdypart. usr2 happens to have bdypart. You know where this goes.",
-            "usr1 stands across from usr2. A standoff. usr1 smiles, revealing the contents of their trenchcoat. It's... knives. To be exact, it's 250 knives. usr1 throws each and every knife at usr2. Lets just say, usr2 didn't make it out.",
-            "usr1 is out at a romantic dinner with usr2. usr1 waits until no one is looking, then grabs the butterknife, cutting out usr2's bdypart, and making a dash for it.",
-            "usr1 cuts off usr2's bdypart.",
-            "usr1 stabs usr2.",
-            "usr1 leaps onto usr2's back, then plunges their knives into usr2's chest. FATALITY!",
-            "usr1 feels a sudden onset of bloodlust. Unfortunately, usr2 is the closest person. usr1 is now the proud owner of usr2's bdypart.",
-            "usr1 stands across from usr2.\n\n'Do you really think you can stop me?' laughs usr1.\n\n'Ha! You overestimate your own power' says usr2.\n\nusr2 attacks usr1, but in the blink of an eye, usr1 is behind usr2. \n\n'I'm going to cut out your bdypart, stuff it, and put it on my mantle.'\n\nusr2 is struck with fear as usr1 stabs them. usr1 smiles evilly. The deed is done."
+    "rogue": {
+        "normal": [
+            "usr1 stealthily approaches usr2 and delivers a swift stab to their bdypart.",
+            "From the shadows, usr1 strikes at usr2, their dagger slicing cleanly through usr2's bdypart.",
+            "usr1 uses a smoke bomb to disorient usr2, then quickly slashes their bdypart.",
+            "With a flick of the wrist, usr1 throws a dagger that embeds itself in usr2's bdypart.",
+            "usr1 performs a cunning feint, followed by a precise cut to usr2's bdypart.",
+            "usr1 slips behind usr2 unnoticed and drives a knife deep into their bdypart.",
+            "usr1's swift movements are a blur as they dart in and slice usr2's bdypart.",
+            "Using the environment to their advantage, usr1 ambushes usr2, targeting their bdypart.",
+            "usr1's low sweep catches usr2 off-guard, injuring their bdypart severely.",
+            "In a display of agility, usr1 vaults over usr2, striking down hard on their bdypart."
         ],
-        "crit":[
-            "usr1 crits usr2"
+        "crit": [
+            "usr1 executes a masterful backstab that completely severs usr2's bdypart, leaving a gory spectacle.",
+            "In a moment of perfect stealth, usr1 delivers a crippling blow to usr2's bdypart, rendering it useless.",
+            "usr1's dagger glints ominously before it finds a home in usr2's bdypart, the strike silent but deadly.",
+            "With a calculated move, usr1's throw sends a dagger spinning through the air, embedding deeply in usr2's bdypart.",
+            "As quick as a shadow, usr1 slips through usr2's defenses, their blade slicing critical tendons in usr2's bdypart.",
+            "usr1's precise strike not only injures usr2 but also plants a slow-acting poison, starting at the bdypart.",
+            "A sudden flash of light marks usr1's critical move, a swift strike that almost bisects usr2's bdypart.",
+            "With deadly precision, usr1 aims and hits a vital point on usr2's bdypart, the pain immediate and overwhelming.",
+            "usr1 combines agility with deadly intent, their critical hit puncturing an artery in usr2's bdypart.",
+            "The air hums as usr1 moves faster than the eye can follow, their strike devastatingly precise on usr2's bdypart."
         ]
     }
 }
+

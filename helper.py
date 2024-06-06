@@ -14,6 +14,102 @@ body_parts = ['bones', 'hair', 'fingernail', 'thumb', 'middle finger', 'big toe'
 # class_data = class_data.fetchall()
 # conn.close()
 
+class APError(Exception):
+    def __init__(self, message="Not enough Action Points (AP) to perform this action."):
+        self.message = message
+        super().__init__(self.message)
+
+class UserNonexistentError(Exception):
+    def __init__(self, message="User does not currently exist."):
+        self.message = message
+        super().__init__(self.message)
+    
+async def alter_ap(bot, user_id, base_ap_cost):
+    """
+    Alters the user's AP by deducting the action cost and raises an error if the user cannot afford the cost.
+
+    bot: The instance of the bot accessing this function.
+    user_id (str): The ID of the user whose AP is being modified.
+    action_cost (int): The AP cost of the action being performed.
+    """
+   # Calculate the actual AP cost including any modifications from status effects
+    actual_ap_cost = await calculate_ap_cost(bot, user_id, base_ap_cost)
+
+    # Ensure the user is initialized in the AP dictionary
+    if user_id not in bot.user_aps:
+        bot.user_aps[user_id] = 20  # Initialize with default AP if not previously set
+
+    # Check if the user can afford the action
+    if bot.user_aps[user_id] >= actual_ap_cost:
+        bot.user_aps[user_id] -= actual_ap_cost  # Deduct the actual AP cost
+    else:
+        raise APError(f"You need at least {actual_ap_cost} AP to perform this action, but you only have {bot.user_aps[user_id]} AP.")
+    
+async def calculate_ap_cost(bot, user_id, base_ap_cost):
+    """
+    Calculates the completed Action Point (AP) cost for a given action.
+
+    :param bot: The bot object
+    :param user_id: The user ID to calculate the AP for.
+    :param base_ap_cost: The base cost of the action.
+    """
+    # Check if user exists in user_aps, if not and exists in DB, initialize with 20 AP
+    if user_id not in bot.user_aps:
+        # This check can be expanded to verify user existence if necessary
+        bot.user_aps[user_id] = 20  # Default AP if user exists in the DB
+
+    # Apply status effects to modify the base AP cost
+    current_ap_effects = bot.user_effects.get(user_id, [])
+    for effect in current_ap_effects:
+        pass # TODO: Implement this later.
+
+    return max(0, base_ap_cost)  # Ensure AP cost doesn't drop below 1
+
+
+async def crit_handler(bot, attacker_usr, defender_usr, channel, boost=0) -> bool:
+    """
+    Evaluates and handles critical hit chances based on user roles, locations, and status effects.
+
+    bot: The instance of the bot accessing this function.
+    attacker_usr (discord.Member): The user performing the attack.
+    defender_usr (discord.Member): The user defending against the attack.
+    channel (discord.Channel): The channel where the attack takes place.
+    boost (int): Initial modification to critical chance (default 0).
+    """
+    crit_thresh = 1  # Base threshold for a critical hit
+    crit_max = 20  # Maximum range for critical hit roll
+
+    crit_thresh += boost  # Apply any initial boost to the critical threshold
+
+    # Calculate the final crit chance
+    crit_result = random.randint(1, crit_max) <= crit_thresh
+
+    return crit_result
+
+async def alter_class(user: discord.Member, new_class_name: str):
+    """
+    Changes the class of a specified user to a new class by name.
+
+    :param user: discord.Member - The user whose class is to be changed.
+    :param new_class_name: str - The name of the new class to assign to the user.
+    """
+    async with aiosqlite.connect('data/main.db') as db:
+        # Fetch the class_id corresponding to the class name
+        cursor = await db.execute("""
+            SELECT class_id FROM classes WHERE class_name = ?;
+        """, (new_class_name,))
+        class_row = await cursor.fetchone()
+
+        if class_row:
+            new_class_id = class_row[0]
+            # Update the user's class_id in the users table
+            await db.execute("""
+                UPDATE users SET class_id = ? WHERE user_id = ?;
+            """, (new_class_id, user.id))
+            await db.commit()
+        else:
+            raise ValueError(f"No class found with the name {new_class_name}")
+
 async def give_item(user_id, item_id, amount=1):
     """
     Gives a specified amount of an item to a user.
@@ -105,6 +201,18 @@ def ordinal(n) -> str:
     else:
         suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')
     return f"{n}{suffix}"
+
+async def get_coolness(user_id):
+    """
+    Return the coolness of a given user
+
+    :param user_id: The user's id
+    :return: Their coolness
+    """
+    async with aiosqlite.connect('data/main.db') as con:
+        async with con.execute("SELECT coolness FROM users WHERE user_id = ?", (user_id,)) as cursor:
+            result = await cursor.fetchone()
+    return result[0] if result else 0
         
 async def grant_achievement(channel, user, achievement_id):
     """
@@ -410,7 +518,6 @@ class QuestManager:
             """, (user_id,))
             result = await cursor.fetchone()
             if result is not None:
-                print(result)
                 return
 
             # Check the number of completed quests for the user

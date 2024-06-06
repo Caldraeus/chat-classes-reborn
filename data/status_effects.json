@@ -1,6 +1,6 @@
 {
-    "test":[
-        "this is a test",
-        "and so is tis"
-    ]
+    "shatter":{
+        "positive":true,
+        "description":"Your mind is shattered! Good luck speaking properly."
+    }
 }

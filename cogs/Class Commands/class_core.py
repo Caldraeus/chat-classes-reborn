@@ -218,7 +218,7 @@ class class_core(commands.Cog):
         if user is None:
             user = interaction.user
         try:
-            profile = await h.genprof(user, self.bot.users_ap, self.bot) 
+            profile = await h.genprof(user, self.bot.user_aps, self.bot) 
             if profile:
                 await interaction.response.send_message(embed=profile, ephemeral=True)
             else:

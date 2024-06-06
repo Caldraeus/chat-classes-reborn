@@ -46,11 +46,8 @@ Global variables
  > these in a more permanent manner, it's just not worth the overhead. This might change later down the line,
  > but for now this is what I've decided.
 """ 
-bot.users_ap = {}
-bot.registered_users = {}
-bot.users_classes = {}
-bot.users_ap = {}
-bot.user_status = {}
+bot.user_aps = {}
+bot.user_effects = {}
 # These global variables are currently not used; this wis subject to change.
 
 async def load_dir_files(path, dash) -> None:

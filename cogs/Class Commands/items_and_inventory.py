@@ -113,7 +113,6 @@ class items_and_inventory(commands.Cog):
             await interaction.response.send_message(embed=embed)
 
     @discord.app_commands.command(name="inventory")
-    @discord.app_commands.guilds(discord.Object(id=741447688079540224))
     async def inventory(self, interaction: discord.Interaction, user: discord.Member = None):
         """View your inventory or another user's inventory."""
         user = user if user else interaction.user
@@ -137,6 +136,77 @@ class items_and_inventory(commands.Cog):
         pages = [items[i:i + page_size] for i in range(0, len(items), page_size)]
 
         view = self.InventoryView(user, 0, pages)
+        embed = view.create_embed()
+        await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
+
+    @item_group.command(name="buy")
+    @discord.app_commands.describe(
+        item_name="The name of the item to buy",
+        amount="The amount of the item to buy (default is 1)"
+    )
+    @discord.app_commands.autocomplete(item_name=autocomplete_item_names)
+    async def item_buy(self, interaction: discord.Interaction, item_name: str, amount: int = 1):
+        """Buy an item from the shop."""
+        async with aiosqlite.connect('data/main.db') as conn:
+            cursor = await conn.execute("""
+                SELECT item_id, item_price, item_secret FROM items
+                WHERE item_name = ?;
+            """, (item_name,))
+            item = await cursor.fetchone()
+
+            if not item:
+                await interaction.response.send_message("🚫 | Item not found.", ephemeral=True)
+                return
+
+            if item[2]:  # Check if the item is secret
+                await interaction.response.send_message("🚫 | This item cannot be bought.", ephemeral=True)
+                return
+
+            total_cost = item[1] * amount
+
+            # Check if the user has enough gold
+            cursor = await conn.execute("SELECT gold FROM users WHERE user_id = ?;", (interaction.user.id,))
+            user_gold = await cursor.fetchone()
+
+            if not user_gold or user_gold[0] < total_cost:
+                await interaction.response.send_message(f"🚫 | You do not have enough gold. You need {total_cost} G.", ephemeral=True)
+                return
+
+            # Deduct gold from the user
+            await conn.execute("UPDATE users SET gold = gold - ? WHERE user_id = ?;", (total_cost, interaction.user.id))
+
+            # Add item to user's inventory
+            cursor = await conn.execute("SELECT amount FROM user_inventory WHERE user_id = ? AND item_id = ?;", (interaction.user.id, item[0]))
+            existing = await cursor.fetchone()
+            if existing:
+                new_amount = existing[0] + amount
+                await conn.execute("UPDATE user_inventory SET amount = ? WHERE user_id = ? AND item_id = ?;", (new_amount, interaction.user.id, item[0]))
+            else:
+                await conn.execute("INSERT INTO user_inventory (user_id, item_id, amount) VALUES (?, ?, ?);", (interaction.user.id, item[0], amount))
+
+            await conn.commit()
+        await interaction.response.send_message(f"✅ | You have bought {amount} of {item_name} for {total_cost} G.", ephemeral=True)
+
+    @item_group.command(name="shop")
+    async def item_shop(self, interaction: discord.Interaction):
+        """Displays the item shop with pagination."""
+        async with aiosqlite.connect('data/main.db') as conn:
+            cursor = await conn.execute("""
+                SELECT item_name, item_description, item_price
+                FROM items
+                WHERE item_secret = 0
+                ORDER BY item_name;
+            """)
+            items = await cursor.fetchall()
+
+        if not items:
+            await interaction.response.send_message("🚫 | The shop is empty!", ephemeral=True)
+            return
+
+        # Create pages from items
+        pages = h.paginate(items, page_size=5)
+
+        view = self.ShopView(interaction.user, 0, pages)
         embed = view.create_embed()
         await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
 
@@ -177,6 +247,42 @@ class items_and_inventory(commands.Cog):
                 return False
             return True
         
-    
+    class ShopView(discord.ui.View):
+        def __init__(self, author, page, pages):
+            super().__init__(timeout=180)  # Timeout after 180 seconds of inactivity
+            self.author = author
+            self.page = page
+            self.pages = pages
+
+        @discord.ui.button(label='Previous', style=discord.ButtonStyle.blurple)
+        async def previous_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+            if self.page > 0:
+                self.page -= 1
+            else:
+                self.page = len(self.pages) - 1
+            await interaction.response.edit_message(embed=self.create_embed(), view=self)
+
+        @discord.ui.button(label='Next', style=discord.ButtonStyle.blurple)
+        async def next_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+            if self.page < len(self.pages) - 1:
+                self.page += 1
+            else:
+                self.page = 0
+            await interaction.response.edit_message(embed=self.create_embed(), view=self)
+
+        def create_embed(self):
+            items = self.pages[self.page]
+            embed = discord.Embed(title="🛒 Item Shop", description=f"Page {self.page + 1} of {len(self.pages)}", color=discord.Colour.gold())
+            embed.set_thumbnail(url='https://cdn-icons-png.flaticon.com/512/513/513893.png')
+            for item_name, item_description, item_price in items:
+                embed.add_field(name=f"{item_name} - {item_price} G", value=item_description, inline=False)
+            return embed
+
+        async def interaction_check(self, interaction: discord.Interaction):
+            if interaction.user.id != self.author.id:
+                await interaction.response.send_message("❌ | You do not have permission to interact with this shop.", ephemeral=True)
+                return False
+            return True
+        
 async def setup(bot):
     await bot.add_cog(items_and_inventory(bot))

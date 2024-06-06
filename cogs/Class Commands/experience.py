@@ -36,7 +36,7 @@ class experience(commands.Cog):
         current_time = datetime.datetime.now()
 
         # Enforce a 5-second cooldown for XP gain
-        if user_id in self.last_message_time and (current_time - self.last_message_time[user_id]).total_seconds() < 5:
+        if user_id in self.last_message_time and (current_time - self.last_message_time[user_id]).total_seconds() < 10:
             return
 
         # Update last message time

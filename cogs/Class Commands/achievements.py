@@ -52,6 +52,19 @@ class achievements(commands.Cog):
             achievements = await cursor.fetchall()
             return [ach[0] for ach in achievements] if achievements else None
         
+    key_phrases_necromancer = [
+        r"\b(kms)\b",
+        r"\bi want to die\b",
+        r"\byou want me to die\b",
+        r"\bi feel like dying\b",
+        r"\bi want to end it\b",
+        r"\bi can't go on\b",
+        r"\blife is pointless\b",
+        r"\bno reason to live\b",
+        r"\bi hate my life\b",
+        r"\bim going to kill myself",
+    ]
+
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if await h.user_exists(message.author.id) and await h.channel_check(message.channel.id):
@@ -59,6 +72,9 @@ class achievements(commands.Cog):
                 return
             if 'a' in message.content.lower():
                 await h.grant_achievement(message.channel, message.author, 1)
+            for phrase in self.key_phrases_necromancer:
+                if re.search(phrase, message.content, re.IGNORECASE):
+                    await h.grant_achievement(message.channel, message.author, 3)
 
     @commands.Cog.listener()
     async def on_app_command_completion(self, interaction: discord.Interaction, command: app_commands.Command) -> None:
