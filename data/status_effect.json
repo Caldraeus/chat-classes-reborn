@@ -1,0 +1,37 @@
+{
+    "shattered":{
+        "positive":false,
+        "message":true,
+        "description":"Your mind is shattered! Good luck speaking properly."
+    },
+    "burning":{
+        "positive":false,
+        "message":true,
+        "description":"YOU ARE ON FIRE!!! AHHHHH!"
+    },
+    "inspired":{
+        "positive":true,
+        "message":false,
+        "description":"You are inspired! Your crit chance has been slightly raised."
+    },
+    "ascendant":{
+        "positive":true,
+        "message":false,
+        "description":"You are ascendant; the world bends to your very will, and your power knows no bounds! Your critical strike chance is 100%."
+    },
+    "poisoned":{
+        "positive":false,
+        "message":false,
+        "description":"Uh oh, you've been poisoned! Your next action that costs AP costs 2 extra AP!"
+    },
+    "marked":{
+        "positive":false,
+        "message":false,
+        "description":"You've been marked by a Hunter! The next attack against you from a non-Hunter player will be a critical."
+    },
+    "embershield":{
+        "positive":true,
+        "message":false,
+        "description":"You're burning hot! The next attack against you is blocked, and you convert it into coolness!"
+    }
+}

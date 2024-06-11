@@ -15,9 +15,14 @@ class economy(commands.Cog):
         self.rollover_task.cancel()
         self.update_status.cancel()
 
+    async def reset_user_class_specific(self):
+        class_cog = self.bot.get_cog('action_core')
+        class_cog.nomad_homes.clear()
+
     @tasks.loop(hours=24)
     async def rollover_task(self):
-        self.reset_users_ap()
+        await self.reset_users_ap()
+        await self.reset_user_class_specific()
         self.bot.claimed.clear()
         print("Rollover completed: AP reset and claimed list cleared.")
 
@@ -28,9 +33,10 @@ class economy(commands.Cog):
         next_rollover = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
         await discord.utils.sleep_until(next_rollover)
 
-    def reset_users_ap(self):
-        self.bot.user_aps = {user_id: 20 for user_id in self.bot.user_aps.keys()}  # Reset all user APs to 20
+    async def reset_users_ap(self):
+        self.bot.user_aps = {user_id: (20 if ap < 20 else ap) for user_id, ap in self.bot.user_aps.items()}
         self.bot.user_aps[217288785803608074] = 9999
+
 
     @app_commands.command(name="daily", description="Claim your daily rewards.")
     async def daily(self, interaction: discord.Interaction):

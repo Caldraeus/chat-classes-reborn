@@ -95,7 +95,7 @@ class class_core(commands.Cog):
             response = await client.chat.completions.create(
                 model="gpt-4o",
                 messages=[
-                    {"role": "system", "content": f"Mimic the personality and typing style provided: {context}. Responses are sent through discord, so if you wish, make use of discord markdown and whatnot. Avoid using emojis unless you see that the user has used them"},
+                    {"role": "system", "content": f"Mimic the personality and typing style provided: {context}. Responses are sent through discord, so if you wish, make use of discord markdown and whatnot. statusesDo not introduce emojis into your response."},
                     {"role": "user", "content": f"Say hello as {user.display_name}, acting like you just woke up and had a weird dream about being a simulacrum."}
                 ],
                 max_tokens=50,  # Adjust this to control the length
@@ -152,7 +152,7 @@ class class_core(commands.Cog):
                         response = await client.chat.completions.create(
                             model="gpt-4o",
                             messages=[
-                                {"role": "system", "content": f"Assume the identity of {clone_data['username']}. Analyze the provided text and closely imitate the personality, typing style, and any idiosyncrasies found in the previous messages: {clone_data['context']}. Your responses should not only remain in character but also reflect the same level of formality, slang usage, and emotive expressions as seen in the historical messages. Try to keep responses concise when able. Do not introduce emojis. Your messages are going to be sent on discord."},
+                                {"role": "system", "content": f"Assume the identity of {clone_data['username']}. Analyze the provided text and closely imitate the personality, typing style, and any idiosyncrasies found in the previous messages: {clone_data['context']}. Your responses should not only remain in character but also reflect the same level of formality, slang usage, and emotive expressions as seen in the historical messages. Try to keep responses concise when able. statusesDo not introduce emojis into your response.. Your messages are going to be sent on discord."},
                                 {"role": "user", "content": user_prompt}
                             ],
                             max_tokens=80,
@@ -222,8 +222,8 @@ class class_core(commands.Cog):
             if profile:
                 await interaction.response.send_message(embed=profile, ephemeral=True)
             else:
-                raise TypeError
-        except TypeError:
+                raise SyntaxError
+        except SyntaxError:
             await interaction.response.send_message("User does not have a profile! Run `/start` to get one!", ephemeral=True)
 
         
@@ -291,9 +291,127 @@ class class_core(commands.Cog):
                 if image_url:
                     embed.set_thumbnail(url=image_url)
 
-                await interaction.response.send_message(embed=embed)
+                await interaction.response.send_message(embed=embed, ephemeral=True)
             else:
                 await interaction.response.send_message("Class not found.", ephemeral=True)
+
+    @app_commands.command(name="progression", description="Displays class progression for the specified class.")
+    @app_commands.describe(clss="The class to display progression for.")
+    @app_commands.autocomplete(clss=autocomplete_class_names)
+    async def progression(self, interaction: discord.Interaction, clss: str):
+        async with aiosqlite.connect('data/main.db') as conn:
+            cursor = await conn.execute("""
+                SELECT class_name, class_description, ach_lock
+                FROM classes
+                WHERE previous_class_id = (SELECT class_id FROM classes WHERE class_name = ?);
+            """, (clss,))
+            class_info = await cursor.fetchall()
+
+        profile = discord.Embed(title=f"🌟 {clss.title()} Class Progression 🌟", colour=discord.Colour.from_rgb(255, 165, 0))
+        profile.set_footer(text="A lock symbol next to a class name means there's an achievement required to choose it!", icon_url="")
+
+        if class_info:
+            for (class_name, class_description, ach_lock) in class_info:
+                if ach_lock:
+                    profile.add_field(name=f"🔒 | {class_name.title()}", value=class_description, inline=False)
+                else:
+                    profile.add_field(name=class_name.title(), value=class_description, inline=False)
+            await interaction.response.send_message(embed=profile, ephemeral=True)
+        else:
+            await interaction.response.send_message("That class either doesn't exist or doesn't have any class progressions!", ephemeral=True)
+
+    @app_commands.command(name="classup", description="Level up your class.")
+    async def classup(self, interaction: discord.Interaction):
+        user_id = interaction.user.id
+        async with aiosqlite.connect('data/main.db') as conn:
+            async with conn.execute("SELECT exp, level, class_id FROM users WHERE user_id = ?", (user_id,)) as profile:
+                prof = await profile.fetchone()
+            
+            async with conn.execute("SELECT achievement_id FROM user_achievements WHERE user_id = ?", (user_id,)) as ach_info:
+                user_achievements = [row[0] for row in await ach_info.fetchall()]
+
+            async with conn.execute("SELECT class_id, class_name FROM classes WHERE class_id = ?", (prof[2],)) as class_info:
+                current_class = await class_info.fetchone()
+
+        xp = prof[0]
+        current_lvl = prof[1]
+        current_class_id = current_class[0]
+
+        print(f"User {interaction.user.name} with class {current_class[1]} (ID: {current_class_id}) is checking for class-up options.")
+
+        if (current_lvl + 1) % 10 == 0 and xp >= h.max_xp(current_lvl):
+            allowed_classes = []
+
+            async with aiosqlite.connect('data/main.db') as conn:
+                async with conn.execute("""
+                    SELECT class_id, class_name, class_description, ach_lock FROM classes 
+                    WHERE previous_class_id = ?;
+                """, (current_class_id,)) as cinfo:
+                    class_info = await cinfo.fetchall()
+
+            print(f"Fetched class_info: {class_info}")
+
+            profile = discord.Embed(title=f"🌟 CLASS-UP! 🌟", colour=discord.Colour.from_rgb(255, 165, 0))
+            for potential_class in class_info:
+                class_id, class_name, class_description, ach_lock = potential_class
+                print(f"Processing class {class_name} with ach_lock {ach_lock}")
+                if ach_lock and ach_lock in user_achievements:
+                    profile.add_field(name=class_name.title(), value=class_description.replace(r'\n', '\n'), inline=False)
+                    allowed_classes.append((class_id, class_name.lower()))
+                elif ach_lock == 0 or ach_lock is None:
+                    profile.add_field(name=class_name.title(), value=class_description.replace(r'\n', '\n'), inline=False)
+                    allowed_classes.append((class_id, class_name.lower()))
+
+            print(f"Allowed classes: {allowed_classes}")
+
+            if not allowed_classes:
+                await interaction.response.send_message("You do not have any classes available for progression.", ephemeral=True)
+                return
+
+            await interaction.response.send_message(embed=profile, ephemeral=True)
+
+            options = [discord.SelectOption(label=class_name.title(), value=str(class_id)) for class_id, class_name in allowed_classes]
+            select = discord.ui.Select(placeholder="Choose your next class...", options=options)
+
+            async def select_callback(select_interaction: discord.Interaction):
+                selected_class_id = int(select.values[0])
+                selected_class_name = next((name for cid, name in allowed_classes if cid == selected_class_id), "Unknown Class")
+                await select_interaction.response.send_message(f"You selected {selected_class_name}. Click confirm to proceed.", ephemeral=True)
+                confirm_button = discord.ui.Button(label="Confirm", style=discord.ButtonStyle.green)
+
+                async def confirm_callback(confirm_interaction: discord.Interaction):
+                    async with aiosqlite.connect('data/main.db') as conn:
+                        await conn.execute("""
+                            UPDATE users 
+                            SET class_id = ?, exp = 0, level = ? 
+                            WHERE user_id = ?;
+                        """, (selected_class_id, current_lvl + 1, user_id))
+                        await conn.commit()
+
+                    # Charming class-up message
+                    class_up_message = (
+                        f"Alright! Here we go! \n\n"
+                        f"*3...*\n\n"
+                        f"*<:STEASnothing:517873442381627392>2...*\n\n"
+                        f"*<:STEASnothing:517873442381627392><:STEASnothing:517873442381627392>1... and...!*\n\n"
+                        f"<:STEASnothing:517873442381627392><:STEASnothing:517873442381627392><:STEASnothing:517873442381627392>"
+                        f"<:STEASnothing:517873442381627392>☁️ **P O O F !** ☁️\n\n"
+                        f"{interaction.user.mention} is now a **{selected_class_name.title()}**! Congratulations!"
+                    )
+                    await confirm_interaction.response.send_message(class_up_message, ephemeral=False)
+
+                confirm_button.callback = confirm_callback
+                view = discord.ui.View()
+                view.add_item(confirm_button)
+                await select_interaction.followup.send(view=view, ephemeral=True)
+
+            select.callback = select_callback
+            view = discord.ui.View()
+            view.add_item(select)
+            await interaction.followup.send(view=view, ephemeral=True)
+
+        else:
+            await interaction.response.send_message("Sorry, you can't change classes yet! Come back when you're higher level.", ephemeral=True)
 
 
 

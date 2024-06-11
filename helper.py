@@ -23,8 +23,118 @@ class UserNonexistentError(Exception):
     def __init__(self, message="User does not currently exist."):
         self.message = message
         super().__init__(self.message)
+
+class AttackBlockedError(Exception):
+    def __init__(self, message="Attack attempt blocked."):
+        self.message = message
+        super().__init__(self.message)
+
+async def get_user_inventory(user_id):
+    """Fetches the user's inventory from the database including item names."""
+    async with aiosqlite.connect('data/main.db') as db:
+        # SQL query to join user_inventory with items table to get item names
+        cursor = await db.execute("""
+            SELECT ui.item_id, ui.amount, it.item_name
+            FROM user_inventory ui
+            JOIN items it ON ui.item_id = it.item_id
+            WHERE ui.user_id = ?
+        """, (user_id,))
+        inventory = await cursor.fetchall()
+        return inventory
+
+async def deduct_ap(bot, user_id, ap_value):
+    """
+    Deducts the given AP value from the user's AP and sets it to zero if it goes negative.
+
+    :param bot: The instance of the bot accessing this function.
+    :param user_id: The ID of the user whose AP is being modified.
+    :param ap_value: The amount of AP to deduct.
+    """
+    # Ensure the user is initialized in the AP dictionary
+    if user_id not in bot.user_aps:
+        return
     
-async def alter_ap(bot, user_id, base_ap_cost):
+    # Deduct the AP value
+    bot.user_aps[user_id] -= ap_value
+
+    # Ensure AP does not go negative
+    if bot.user_aps[user_id] < 0:
+        bot.user_aps[user_id] = 0
+
+async def check_gold(user_id, required_gold):
+    """
+    Check if a user has enough gold given a required amount.
+
+    :param user_id (int): The ID of the user to check.
+    :param required_gold (int): The amount of gold needed.
+
+    :return bool: True if the user has enough gold, False otherwise.
+    """
+    async with aiosqlite.connect('data/main.db') as db:
+        cursor = await db.execute("SELECT gold FROM users WHERE user_id = ?", (user_id,))
+        result = await cursor.fetchone()
+        if result:
+            user_gold = result[0]
+            return user_gold >= required_gold
+        return False
+    
+async def check_item_quantity(user_id, item_name, required_quantity):
+    """
+    Check if a user has enough of a specified item.
+
+    :param user_id (int): The ID of the user to check.
+    :param item_name (str): The name of the item to check.
+    :param required_quantity (int): The amount of the item needed.
+
+    :return bool: True if the user has enough of the item, False otherwise.
+    """
+    async with aiosqlite.connect('data/main.db') as db:
+        # Fetch the quantity of the specific item from the user's inventory
+        cursor = await db.execute("""
+            SELECT ui.amount
+            FROM user_inventory ui
+            JOIN items it ON ui.item_id = it.item_id
+            WHERE ui.user_id = ? AND it.item_name = ?
+        """, (user_id, item_name))
+        result = await cursor.fetchone()
+        if result:
+            current_quantity = result[0]
+            return current_quantity >= required_quantity
+        return False
+    
+async def transfer_gold(sender_id: int, receiver_id: int, amount: int) -> bool:
+    """
+    Transfers a specified amount of gold from one user to another.
+
+    :param sender_id: The ID of the user sending gold.
+    :param receiver_id: The ID of the user receiving gold.
+    :param amount: The amount of gold to transfer.
+    :return: True if the transfer is successful, False otherwise.
+    """
+    async with aiosqlite.connect('data/main.db') as db:
+        # Start a transaction (trying this out)
+        await db.execute("BEGIN")
+
+        # Deduct gold from the sender
+        await db.execute("""
+            UPDATE users SET gold = gold - ? WHERE user_id = ? AND gold >= ?
+        """, (amount, sender_id, amount))
+
+        # Check if the deduction was successful
+        if db.total_changes == 0:
+            await db.execute("ROLLBACK")
+            return False
+        
+        # Add gold to the receiver
+        await db.execute("""
+            UPDATE users SET gold = gold + ? WHERE user_id = ?
+        """, (amount, receiver_id))
+
+        # Commit the transaction
+        await db.execute("COMMIT")
+        return True
+    
+async def alter_ap(bot, user_id, base_ap_cost) -> None:
     """
     Alters the user's AP by deducting the action cost and raises an error if the user cannot afford the cost.
 
@@ -65,26 +175,86 @@ async def calculate_ap_cost(bot, user_id, base_ap_cost):
 
     return max(0, base_ap_cost)  # Ensure AP cost doesn't drop below 1
 
-
-async def crit_handler(bot, attacker_usr, defender_usr, channel, boost=0) -> bool:
+async def crit_handler(bot, attacker_usr, defender_usr, interaction, boost=0) -> bool:
     """
     Evaluates and handles critical hit chances based on user roles, locations, and status effects.
 
-    bot: The instance of the bot accessing this function.
-    attacker_usr (discord.Member): The user performing the attack.
-    defender_usr (discord.Member): The user defending against the attack.
-    channel (discord.Channel): The channel where the attack takes place.
-    boost (int): Initial modification to critical chance (default 0).
+    :param bot: The instance of the bot accessing this function.
+    :param attacker_usr (discord.Member): The user performing the attack.
+    :param defender_usr (discord.Member): The user defending against the attack.
+    :param channel (discord.Channel): The channel where the attack takes place.
+    :param boost (int): Initial modification to critical chance (default 0).
+    :return: True if a critical hit occurs, False if not, None if the roll is 1.
     """
-    crit_thresh = 1  # Base threshold for a critical hit
     crit_max = 20  # Maximum range for critical hit roll
+    crit_min = 1 # The minimum result for a critical hit roll.
 
-    crit_thresh += boost  # Apply any initial boost to the critical threshold
+    # Handle status effects from attacker.
+    crit_min, crit_max = await handle_user_effects(bot, defender_usr, interaction, crit_min, crit_max, "defender") if defender_usr else (crit_min, crit_max)
+    crit_min, crit_max = await handle_user_effects(bot, attacker_usr, interaction, crit_min, crit_max, "attacker")
 
-    # Calculate the final crit chance
-    crit_result = random.randint(1, crit_max) <= crit_thresh
+    # Randomly generate a number within the critical range
+    crit_result = random.randint(crit_min, crit_max)
 
-    return crit_result
+    # Return None if the number rolled is 1
+    if crit_result == 1:
+        return None
+
+    # Calculate the final crit chance by checking if the rolled number is within the threshold
+    crit_thresh = crit_max - boost  # Base threshold for a critical hit, adjusted by any boost
+    return crit_result >= crit_thresh
+
+async def handle_user_effects(bot, user, interaction, crit_min, crit_max, role):
+    """
+    Calculate and apply effects for a user (attacker or defender).
+
+    :param bot: The instance of the bot.
+    :param user: The user (attacker or defender).
+    :param interaction: The Discord interaction context.
+    :param crit_min: Initial critical hit minimum threshold.
+    :param crit_max: Initial critical hit maximum threshold.
+    :param role: 'attacker' or 'defender' to specify the role of the user.
+    :return: Tuple (crit_min, crit_max) of updated critical hit thresholds.
+    """
+    statuses = bot.get_cog("statuses")
+    effects_to_remove = []
+
+    # Apply status critical hit adjustments.
+    if user.id in statuses.user_status_effects:
+        for effect, stacks in list(statuses.user_status_effects[user.id].items()):
+            if statuses.status_effects[effect].get("message", True) == False:
+                if role == 'attacker':
+                    if effect == "inspired":
+                        crit_min += 2  # Inspired increases minimum crit threshold
+                    if effect == "ascendant":
+                        crit_min = crit_max = 20  # Ascendant sets crit thresholds to maximum
+                    effects_to_remove.append((effect, 1))
+                elif role == 'defender':
+                    if effect == 'embershield':
+                        amount = random.randint(100, 200)
+                        await interaction.response.send_message(f'🔥 | Your attack is blocked by **{user.mention}**\'s embershield! Owch! They gain {amount} coolness instead.')
+                        await add_coolness(user.id, amount)
+                        await statuses.remove_status_effect(user.id, effect, 1)
+                        raise AttackBlockedError("Attack blocked by embershield.")
+                    elif await get_user_class(interaction.user.id) != 'Hunter' and effect == 'marked':
+                        crit_min = crit_max = 20  # Guarantee crit
+                    effects_to_remove.append((effect, 1))
+
+    for effect, stacks in effects_to_remove:
+        await statuses.remove_status_effect(user.id, effect, stacks)
+
+    return crit_min, crit_max
+
+
+async def get_user_class(user_id):
+    async with aiosqlite.connect('data/main.db') as db:
+        cursor = await db.execute("""
+            SELECT class_name FROM classes
+            JOIN users ON classes.class_id = users.class_id
+            WHERE users.user_id = ?;
+        """, (user_id,))
+        result = await cursor.fetchone()
+        return result[0] if result else None
 
 async def alter_class(user: discord.Member, new_class_name: str):
     """
@@ -267,6 +437,24 @@ async def grant_achievement(channel, user, achievement_id):
 
         await db.commit()
 
+async def get_user_level(user_id: int) -> int:
+    """
+    Retrieve the user's level from the database.
+
+    :param int user_id: The ID of the user to retrieve the level for.
+    :return: Integer representing the user's level.
+    """
+    async with aiosqlite.connect('data/main.db') as conn:
+        cursor = await conn.execute("""
+            SELECT level FROM users WHERE user_id = ?;
+        """, (user_id,))
+        result = await cursor.fetchone()
+        if result:
+            return result[0]
+        else:
+            # Handle the case where the user is not found, maybe default to level 1
+            return 0
+
 def max_xp(lvl) -> int:
     """
     Math to generate the maximum XP required for a level.
@@ -274,7 +462,8 @@ def max_xp(lvl) -> int:
     :param int lvl: The level to calculate experience for.
     :return: Integer representing the maximum xp for the given level.
     """
-    return 20 * (lvl ^ 35) + 250 * lvl + 25
+    # Original: 20 * (lvl ^ 35) + 250 * lvl + 25
+    return 50 * (lvl ^ 45) + 350 * lvl + 30
 
 async def genrank(uid) -> int:
     """
@@ -368,7 +557,63 @@ async def genprof(uid, aps, bot):
     profile.add_field(name="Completed Quests", value=completed_quests if completed_quests is not None else "N/A", inline=False)
     profile.add_field(name="Action Points", value=aps.get(uid.id, 0), inline=False)
 
+    await add_class_specifics_to_profile(profile, uid, bot)
+
     return profile
+
+async def add_class_specifics_to_profile(profile: discord.Embed, user, bot) -> discord.Embed:
+    cog = bot.get_cog('action_core')
+    user_class = await get_user_class(int(user.id))
+
+    if user_class.lower() == 'nomad':
+        channel = await cog.get_nomad_home(user.id)
+        if channel:
+            profile.add_field(name="Nomad Home", value=f'#{bot.get_channel(channel).name}', inline=False)
+
+    elif user_class.lower() == 'hydromancer':
+        water_level = cog.waterlevels.get(user.id, 0)
+        profile.add_field(name="Water Level", value=str(water_level) + '%', inline=False)
+
+    elif user_class.lower() == 'terramancer':
+        earth_shards = cog.earth_shards.get(user.id, 0)
+        profile.add_field(name="Earth Shards", value=str(earth_shards) + '/5', inline=False)
+
+    elif user_class.lower() == 'ashen sage':
+        cinders = cog.ashen_sage_cinders.get(user.id, 0)
+        pyro_level = cog.pyrolevels.get(user.id, 0)
+        profile.add_field(name="Cinders", value=str(cinders), inline=False)
+        profile.add_field(name="Pyro Level", value=str(pyro_level+20) + '°C', inline=False)
+
+    elif user_class.lower() == 'pyromancer' or user_class.lower() == 'flameborn':
+        pyro_level = cog.pyrolevels.get(user.id, 0)
+        profile.add_field(name="Pyro Level", value=str(pyro_level+20) + '°C', inline=False)
+
+    # Add other classes with specific fields as needed
+
+    return profile
+
+
+async def get_user_class_image(user_id) -> str:
+    """
+    Fetches the class image URL for a given user ID.
+
+    :param db_path: Path to the SQLite database file.
+    :param user_id: ID of the user for whom to fetch the class image.
+    :return: URL of the class image or None if not found.
+    """
+    async with aiosqlite.connect('data/main.db') as db:
+        # Prepare the query to fetch class image URL through the user's class_id
+        query = """
+        SELECT classes.image_url
+        FROM users
+        JOIN classes ON users.class_id = classes.class_id
+        WHERE users.user_id = ?
+        """
+        async with db.execute(query, (user_id,)) as cursor:
+            result = await cursor.fetchone()
+            if result:
+                return result[0]  # Return the image URL
+            return None  # Return None if no class or image URL found
 
 def hash_class_name_to_rgb(class_name: str) -> tuple:
     """
@@ -448,9 +693,81 @@ async def add_xp(user_id, xp_amount):
         return
     async with aiosqlite.connect('data/main.db') as conn:
         await conn.execute("""
-            UPDATE users SET xp = xp + ? WHERE user_id = ?;
+            UPDATE users SET exp = exp + ? WHERE user_id = ?;
         """, (xp_amount, user_id))
         await conn.commit()
+
+async def get_random_users(bot, guild_id, max_amount=1, self_allowed=False, active=True):
+    """
+    Retrieves a random list of users from the specified server.
+
+    :param bot: The bot instance.
+    :param guild_id: ID of the guild from which to retrieve users.
+    :param max_amount: Maximum number of random users to retrieve.
+    :param self_allowed: Whether the bot itself can be included in the list.
+    :param active: Whether to only include users who are considered active.
+    :return: A list of discord.Member objects.
+    """
+    guild = discord.utils.find(lambda g: g.id == guild_id, bot.guilds)
+    if not guild:
+        return []  # Or handle the error as appropriate
+
+    if active:
+        members = [member for member in guild.members if member.status != discord.Status.offline and not member.bot]
+    else:
+        members = [member for member in guild.members if not member.bot]
+
+    if not self_allowed:
+        members = [member for member in members if member != bot.user]
+
+    random.shuffle(members)
+    return members[:max_amount]
+
+def format_user_list(users):
+    """
+    Formats a list of Discord Member objects into a grammatically correct string.
+
+    :param users: A list of discord.Member objects.
+    :return: A formatted string.
+    """
+    if not users:
+        return "No users found."
+
+    # Extract display names and bold them
+    user_names = [f"**{user.display_name}**" for user in users]
+
+    # Format based on the number of users
+    if len(user_names) == 1:
+        return user_names[0]
+    elif len(user_names) == 2:
+        return f"{user_names[0]} and {user_names[1]}"
+    else:
+        return ', '.join(user_names[:-1]) + f", and {user_names[-1]}"
+
+async def add_ap(bot, user_id, ap_amount):
+    """
+    Adds action points to the specified user. This function handles its own database connection.
+    It does not accept negative values for AP, as of right now.
+
+    :param user_id: ID of the user.
+    :param ap_amount: Amount of action points to add, must be non-negative.
+    """
+    if not await user_exists(user_id):
+        # Exit if user does not exist.
+        return
+    bot.user_aps[user_id] += ap_amount
+
+async def set_ap(bot, user_id, ap_amount):
+    """
+    Sets the action points of the specified user.
+
+    :param user_id: ID of the user.
+    :param ap_amount: Amount of action points to hard-set to.
+    """
+    if not await user_exists(user_id):
+        # Exit if user does not exist.
+        return
+    bot.user_aps[user_id] = ap_amount
 
 async def find_origin(user_class):
     """

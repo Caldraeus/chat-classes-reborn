@@ -90,15 +90,18 @@ class experience(commands.Cog):
 
         if new_level % 10 == 0:
             duration = 15
-            await conn.execute("UPDATE users SET exp = ? WHERE user_id = ?", (max_xp_for_current_level, user.id))
-            if user.id in self.notified:
-                return 
-            else:
-                self.notified.append(user.id)
-                embed.title = f"🌟 Milestone Level {new_level - 1} Achieved!"
-                embed.description = (f"🔒 You've filled your XP bar at level {new_level - 1}, {user.display_name}!\n"
-                                    f"To advance to level {new_level}, you must use the `/classup` command.")
-                embed.set_footer(text="Run /classup to unlock your next class and abilities!")
+            if await h.channel_check(message.channel.id):
+                await conn.execute("UPDATE users SET exp = ? WHERE user_id = ?", (max_xp_for_current_level, user.id))
+                if user.id in self.notified:
+                    return 
+                else:
+                    #return
+                    # This line is to prevent the annoyingness during testing.
+                    self.notified.append(user.id)
+                    embed.title = f"🌟 Milestone Level {new_level - 1} Achieved!"
+                    embed.description = (f"🔒 You've filled your XP bar at level {new_level - 1}, {user.display_name}!\n"
+                                        f"To advance to level {new_level}, you must use the `/classup` command.")
+                    embed.set_footer(text="Run /classup to unlock your next class and abilities!")
         else:
             self.notified.remove(user.id) if user.id in self.notified else None
             duration = 5

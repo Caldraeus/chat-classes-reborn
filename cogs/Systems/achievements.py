@@ -22,8 +22,8 @@ class achievements(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
-    @discord.app_commands.command(name="achievements", description="Displays the achievements of a user.")
-    @discord.app_commands.describe(target="The user whose achievements to display.")
+    @app_commands.command(name="achievements", description="Displays the achievements of a user.")
+    @app_commands.describe(target="The user whose achievements to display.")
     async def achievements(self, interaction: discord.Interaction, target: discord.Member = None):
         """Displays achievements for the user or the specified member."""
         if target is None:
@@ -35,22 +35,27 @@ class achievements(commands.Cog):
             return
         
         # Create the embed to display achievements
-        embed = discord.Embed(title=f"{target.display_name}'s Achievements", description="\n".join(achievements), color=discord.Color.gold())
+        embed = discord.Embed(title=f"{target.display_name}'s Achievements", color=discord.Color.gold())
         embed.set_thumbnail(url=target.display_avatar.url)
+        
+        for name, description, unlocks, class_name in achievements:
+            achievement_info = description
+            if class_name:
+                achievement_info += f" (Unlocks: {class_name})"
+            embed.add_field(name=name, value=achievement_info, inline=False)
         
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     async def fetch_user_achievements(self, user_id):
-        """Retrieve achievements from the database for a given user ID."""
-        async with aiosqlite.connect("data/main.db") as db:
-            cursor = await db.execute("""
-                SELECT achievements.name 
-                FROM user_achievements 
-                JOIN achievements ON user_achievements.achievement_id = achievements.achievement_id 
-                WHERE user_id = ?;
+        async with aiosqlite.connect('data/main.db') as conn:
+            cursor = await conn.execute("""
+                SELECT a.name, a.description, a.unlocks, c.class_name FROM user_achievements ua
+                JOIN achievements a ON ua.achievement_id = a.achievement_id
+                LEFT JOIN classes c ON a.unlocks = c.class_id
+                WHERE ua.user_id = ?;
             """, (user_id,))
             achievements = await cursor.fetchall()
-            return [ach[0] for ach in achievements] if achievements else None
+        return achievements
         
     key_phrases_necromancer = [
         r"\b(kms)\b",

@@ -109,57 +109,51 @@ class general_commands(commands.Cog):
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
-    @app_commands.command(name="leaderboard", description="Show the top 5 users with the highest coolness.")
+    @app_commands.command(name="leaderboard", description="Show the top 10 users with the highest coolness.")
     @app_commands.guild_only()
     async def leaderboard(self, interaction: discord.Interaction):
         async with aiosqlite.connect('data/main.db') as con:
-            async with con.execute("SELECT user_id, coolness FROM users ORDER BY coolness DESC LIMIT 10;") as lb:
-                stuff = await lb.fetchall()
-        
+            async with con.execute("SELECT user_id, coolness FROM users ORDER BY coolness DESC;") as lb:
+                all_users = await lb.fetchall()
+
+        display_limit = 10
         final = ""
         in_top = False
-        total = 5
-        amount_skipped = 0
+        user_rank = None
+        user_coolness = 0
 
-        for i, user_data in enumerate(stuff):
-            if i >= total:
-                break
-
-            user_id, coolness = user_data
+        # Generate the leaderboard text
+        for i, (user_id, coolness) in enumerate(all_users[:display_limit], start=1):
             user = self.bot.get_user(int(user_id))
-
-            if user is not None and user.id != interaction.user.id:
-                final += f"#{i + 1 - amount_skipped} - {user.name} - {coolness} Coolness\n\n"
-            elif user is not None and user.id == interaction.user.id:
-                final += f"**#{i + 1 - amount_skipped} - {user.name} - {coolness} Coolness**\n\n"
+            user_line = f"#{i} - {(user.name if user else 'Unknown User')} - {coolness} Coolness\n\n"
+            if user and user.id == interaction.user.id:
                 in_top = True
+                user_line = f"**{user_line.strip()}**"
+                user_rank = i
+                user_coolness = coolness
+            final += user_line
 
-                if i + 1 - amount_skipped == 1:
-                    await h.grant_achievement(interaction.channel, interaction.user, 5)
-                    await h.grant_achievement(interaction.channel, interaction.user, 6)
-                else:
-                    await h.grant_achievement(interaction.channel, interaction.user, 6)
-            elif user is None:
-                final += f"#{i + 1 - amount_skipped} - Unknown User - {coolness} Coolness\n\n"
-                amount_skipped += 1
-
+        # Add the user's own rank if they're not in the top displayed
         if not in_top:
-            rank = 1
-            coolness = 0
-            for rank, user_data in enumerate(stuff, start=1):
-                if user_data[0] == str(interaction.user.id):
-                    coolness = user_data[1]
+            for rank, (user_id, coolness) in enumerate(all_users, start=1):
+                if str(user_id) == str(interaction.user.id):
+                    user_rank = rank
+                    user_coolness = coolness
                     break
-
-            final += f"**.  .  .\n\n#{rank} - {interaction.user.name} - {coolness} Coolness**"
+            if user_rank > display_limit:
+                final += f"**.  .  .\n\n#{user_rank} - {interaction.user.name} - {user_coolness} Coolness**"
 
         embed = discord.Embed(title="👑 The Coolest Kids 👑", colour=discord.Colour.from_rgb(255, 255, 0), description=final)
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/491359456337330198/733460129785184297/Funny-Dog-Wearing-Sunglasses.png")
-        
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
-        if await h.get_coolness(interaction.user.id) <= -1000:
-            await h.grant_achievement(interaction.channel, interaction.user, 4)
+        # Granting achievements based on conditions
+        if user_rank == 1:
+            await h.grant_achievement(interaction.channel, interaction.user, 5)  # Achievement for being #1
+        if user_rank and user_rank <= 5:
+            await h.grant_achievement(interaction.channel, interaction.user, 6)  # Achievement for being top 5
+        if user_coolness <= -1000:
+            await h.grant_achievement(interaction.channel, interaction.user, 4)  # Achievement for coolness <= -1000
 
 # A setup function the every cog has
 async def setup(bot):

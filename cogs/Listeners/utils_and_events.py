@@ -6,26 +6,13 @@ import random
 import aiosqlite
 import helper as h
 import logging
+import asyncio
+import signal
 
 class utils_and_events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    # @commands.Cog.listener('on_member_join')
-    # async def on_member_join(self, member):
-    #     guild = self.bot.get_guild(784842140764602398)
-    #     channel = guild.get_channel(892840442020904991)
-
-    #     amount_users = len(guild.members)
-    #     amount_users = str(amount_users) + {1: 'st', 2: 'nd', 3: 'rd'}.get(4 if 10 <= amount_users % 100 < 20 else amount_users % 10, "th")
-
-    #     embed = discord.Embed(title="Welcome to our server!", colour=discord.Colour.from_rgb(201,31,55), description=f"You are our **{amount_users}** member to join!\n──────\n 🔹 Make sure to read the rules!\n\n🔸 Feel free to ask any questions about the server!\n\n🔹 Most of all, have a good time!")
-
-    #     embed.set_image(url="https://cdn.discordapp.com/splashes/784842140764602398/2370139055711deb72ee7f84369b7a01.jpg?size=1024")
-    #     embed.set_thumbnail(url="https://pbs.twimg.com/profile_images/1349406311985934337/hdshQN7l_400x400.jpg")
-    #     embed.set_author(name=str(member), icon_url=member.avatar.url)
-
-    #     await channel.send(f"✨ Welcome to Veilrune, {member.mention}! ✨", embed=embed)
+        self.bot.quest_manager = h.QuestManager('data/main.db', self.bot)
 
     async def initialize_user_aps(self):
         async with aiosqlite.connect('data/main.db') as db:
@@ -42,7 +29,6 @@ class utils_and_events(commands.Cog):
         These are cached for frequent access without needing to query the DB repeatedly.
         """
         await self.initialize_user_aps()
-        self.bot.quest_manager = h.QuestManager('data/main.db', self.bot)
 
         logging.info("Bot is ready and data has been loaded!")
 

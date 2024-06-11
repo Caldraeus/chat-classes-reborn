@@ -86,6 +86,12 @@ class owner_only(commands.Cog):
             else:
                 await ctx.send("❌ No active quest found for this user.")
 
+    @commands.command()
+    @commands.is_owner()
+    async def reset_ap(self, ctx, user: discord.Member):
+        self.bot.user_aps[user.id] = 20
+        await ctx.send("✅ Set user's AP back to 20.")
+
     @commands.command(name="change_class")
     @commands.is_owner()
     async def change_class(self, ctx, user: discord.Member, class_name: str):
@@ -96,6 +102,13 @@ class owner_only(commands.Cog):
             await ctx.send(str(ve))
         except Exception as e:
             await ctx.send(f"❌ Failed to change class: {e}")
+
+    @commands.command()
+    @commands.is_owner()
+    async def status(self, ctx, target: discord.User, effect, amount: int):
+        cog = self.bot.get_cog("statuses")
+        await cog.apply_status_effect(target.id, effect, stacks=amount)
+        await ctx.send(f"Applied {amount} stacks of {effect} to user.")
 
 
 

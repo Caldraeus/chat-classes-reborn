@@ -100,6 +100,561 @@
             "usr1 combines agility with deadly intent, their critical hit puncturing an artery in usr2's bdypart.",
             "The air hums as usr1 moves faster than the eye can follow, their strike devastatingly precise on usr2's bdypart."
         ]
-    }
+    },
+    "dark mage": {
+        "normal": [
+            "usr1 envelops usr2 in shadows, making them vanish except for their bdypart.",
+            "With a sinister laugh, usr1 sends a swarm of dark spirits to torment usr2, focusing on their bdypart.",
+            "usr1 conjures a vortex of dark energy around usr2, slowly disintegrating their bdypart.",
+            "usr1 mutters a curse, and suddenly usr2's shadow rises up, strangling them with icy fingers.",
+            "In a sudden display of dark power, usr1 blasts usr2 with a beam of shadow energy, targeting their bdypart.",
+            "usr1 creates a localized eclipse above usr2, plunging them into darkness and terror.",
+            "Dark tendrils erupt from usr1's hands, wrapping around usr2 and squeezing tightly until they collapse.",
+            "usr1's eyes glow red as they summon a spectral wolf that viciously attacks usr2, mauling their bdypart.",
+            "With a flick of their wrist, usr1 casts a spell of decay, causing usr2's bdypart to wither instantly.",
+            "usr1 whispers a dark incantation, causing the ground beneath usr2 to swallow them up."
+        ],
+        "crit": [
+            "usr1 channels the darkest magics, creating a black hole at usr2's feet that devours them, focusing particularly on their bdypart.",
+            "usr1 performs a forbidden ritual, summoning a demon that tears usr2 apart, starting with their bdypart.",
+            "The air chills as usr1 calls forth the ancient curse of the abyss, which clings to usr2, particularly devouring their bdypart.",
+            "usr1 raises their hands, and a rain of dark meteors falls upon usr2, pulverizing their bdypart specifically.",
+            "Darkness swells as usr1 conjures a massive phantom serpent that swallows usr2 whole, crushing their bdypart first.",
+            "In a terrifying display, usr1 summons the spirits of the damned to torment usr2, tearing at their bdypart relentlessly.",
+            "usr1's spell cracks reality itself, opening a void beneath usr2 that drags them into oblivion, focusing on their bdypart.",
+            "A horde of shadows rises at usr1's command, converging on usr2 and tearing them apart, starting with their bdypart.",
+            "usr1 summons the night itself to engulf usr2, who is slowly consumed by creeping darkness, particularly at their bdypart.",
+            "With a powerful incantation, usr1 unleashes an explosion of dark energy that annihilates usr2, obliterating their bdypart first."
+        ]
+    },
+    "pyromancer": {
+        "normal": [
+            "usr1 ignites a small flame that quickly engulfs usr2, singeing their bdypart in a surprising twist.",
+            "With a snap of their fingers, usr1 sends a fireball hurling towards usr2, catching them squarely in the bdypart.",
+            "usr1 draws a fiery rune in the air, which explodes into a burst of flames, especially around usr2's bdypart.",
+            "The ground beneath usr2 heats up as usr1 channels molten lava to surface, burning more than just their feet.",
+            "usr1 throws a handful of spark dust into the air, igniting a firestorm that dances dangerously close to usr2's bdypart.",
+            "usr1 whispers an incantation, superheating the air which singes usr2, with their bdypart feeling it most.",
+            "Flames dance around usr1's hands before being thrust forward, enveloping usr2 with intense heat around their bdypart.",
+            "usr1's eyes glow with fiery energy as a phoenix swoops at usr2, focusing its fiery wrath on their bdypart.",
+            "usr1 creates a ring of fire that traps and scorches usr2, with their bdypart feeling the heat intensely.",
+            "usr1 claps their hands together, causing an explosion of flame right beneath usr2, engulfing their bdypart."
+        ],
+        "crit": [
+            "usr1 channels a volcanic eruption, unleashing a catastrophic blast that consumes usr2, focusing intensely on their bdypart.",
+            "usr1 summons a dragon made of flames that breathes fire across usr2's body, with their bdypart burning fiercely.",
+            "Inferno spells crack the ground beneath usr2, with flames leaping up to devour their bdypart particularly.",
+            "A massive firestorm surrounds usr2, burning everything, but their bdypart suffers the worst.",
+            "Fire rains from the sky, each ember burning usr2 with particular ferocity at their bdypart.",
+            "usr1 turns air moisture into scalding steam around usr2, focusing the scorching heat on their bdypart.",
+            "usr1 calls upon the sun's wrath, focusing its fiery gaze directly on usr2's bdypart, crisping it thoroughly.",
+            "usr1 causes the air around usr2 to ignite, vaporizing them with a focus on their bdypart.",
+            "usr1 releases flames that spiral and wrap around usr2, incinerating them with a focus on their bdypart.",
+            "usr1 commands the ground to split, and a pillar of fire shoots up, particularly enveloping usr2's bdypart."
+        ],
+        "overheat": [
+            "usr1's magic becomes unstable, erupting in fire that chars usr2, particularly their bdypart.",
+            "usr1 overheats, sending sparks flying that singe usr2's bdypart specifically.",
+            "A burst of mini explosions catches usr2 as usr1 overheats, focusing on their bdypart.",
+            "usr1's spell backfires, resulting in a burst of flame that scorches usr2's bdypart intensely.",
+            "usr1's temperature spikes, releasing a shockwave that mainly affects usr2's bdypart.",
+            "usr1 accidentally ignites the surrounding oxygen, causing a flash fire that burns usr2's bdypart.",
+            "A misfired spell results in an explosion, sending a wave of heat towards usr2, particularly affecting their bdypart.",
+            "usr1 loses control, and a flare-up sends a fireball that targets usr2's bdypart.",
+            "usr1's energy peaks and bursts, creating sparks that focus on singeing usr2's bdypart."
+        ]
+    },
+    "hydromancer": {
+        "normal": [
+            "usr1 conjures a swirling water orb that splashes violently onto usr2, soaking their bdypart.",
+            "With a wave of their hand, usr1 sends a jet of water striking usr2, aiming directly at their bdypart.",
+            "usr1 summons a rain cloud directly above usr2, drenching them thoroughly, with a heavy pour on their bdypart.",
+            "A geyser erupts from beneath usr2 as usr1 manipulates underground water sources.",
+            "usr1 flicks their wrist, causing a burst of water to form into icy shards mid-air, pelting usr2, focusing on their bdypart.",
+            "The air around usr2 chills as usr1 freezes the moisture, creating a frost that bites especially at their bdypart.",
+            "usr1 crafts a whip made of water, snapping it towards usr2, the tip striking their bdypart with precision.",
+            "With a forceful stomp, usr1 causes a wave to rise from the ground, crashing over usr2 with a focus on their bdypart.",
+            "usr1 gestures dramatically, and a circle of water rises, entrapping usr2 and then crashing inward.",
+            "usr1's hands glow blue as they summon a powerful water vortex, sweeping usr2 off their feet and swirling around their bdypart."
+        ],
+        "crit": [
+            "usr1 calls upon the deepest oceans, summoning a tidal wave that engulfs usr2, overwhelming their bdypart with its force.",
+            "The temperature drops as usr1 creates a massive ice spike from the ground beneath usr2, impaling their bdypart directly.",
+            "usr1 channels a torrential downpour, turning into a water cyclone around usr2, focusing destructively on their bdypart.",
+            "usr1 conjures an ice dragon that breathes a freezing blast, encasing usr2 in ice, particularly freezing their bdypart.",
+            "A sudden blizzard conjured by usr1 envelops usr2, with ice crystals targeting and accumulating on their bdypart.",
+            "In a display of power, usr1 forms a giant water hammer, smashing it down on usr2 with a focus on crushing their bdypart.",
+            "usr1 summons the fury of the storm, calling down a bolt of lightning to strike usr2, superheating the water around their bdypart.",
+            "usr1's spell causes the ground to flood suddenly, with whirlpools forming specifically around usr2's bdypart.",
+            "A wall of ice rises at usr1's command, then shatters explosively, sending sharp fragments particularly towards usr2's bdypart.",
+            "usr1 unleashes a barrage of water bullets, each one homing in on usr2, with relentless hits to their bdypart."
+        ],
+        "overflow": [
+            "As usr1's stored water magic overflows, it rejuvenates them but sends a shockwave of icy blasts towards usr2, chilling their bdypart.",
+            "The excess magic bursts out as a cascade of healing water for usr1, while an unexpected wave crashes onto usr2, crushing on their bdypart.",
+            "usr1's magic surges, releasing a restorative mist around them, but causing the ground under usr2 to become slippery and cold, particularly numbing their bdypart.",
+            "Overflowing energy from usr1 turns into a sudden torrent that heals their wounds but soaks usr2, concentrating the cold on their bdypart.",
+            "usr1's aura of water magic grows too strong, enveloping them in a protective bubble while sending a splashing wave that unexpectedly hits usr2's bdypart.",
+            "When usr1's water magic peaks, it forms a revitalizing rain over them, while a miniature whirlpool forms around usr2, tugging at their bdypart.",
+            "As usr1 is enveloped in a healing water column, the overflow sends a series of water spikes towards usr2, impaling their bdypart.",
+            "The build-up of magical water around usr1 bursts forth as a healing fountain, while the spray catches usr2 off guard, dousing their bdypart.",
+            "usr1's excess magic releases a burst of steam, providing them warmth and recovery, while scalding steam burns usr2, scalding their bdypart.",
+            "Overflow from usr1 creates a soothing water shield around them, while the displaced water rushes towards usr2, swirling around their bdypart."
+        ]
+    },
+    "terramancer": {
+        "normal": [
+            "usr1 summons a jagged rock from the ground that shoots towards usr2, striking their bdypart.",
+            "With a stomp, usr1 causes the earth beneath usr2 to ripple, knocking them off their feet and hitting their bdypart.",
+            "usr1 claps their hands together, and a wall of dirt rises abruptly in front of usr2, then collapses onto their bdypart.",
+            "A sudden spire of stone erupts under usr2, catching them unawares and jabbing at their bdypart.",
+            "usr1 gestures forcefully, and several small pebbles lift from the ground, swirling around usr2 and pelting their bdypart.",
+            "The ground under usr2's feet becomes quicksand, pulling them down slightly, grasping at their bdypart.",
+            "usr1 flicks their wrist, and a sharp slate shard flies straight, nicking usr2's bdypart.",
+            "usr1's eyes glow with earthy power as they cause thorny vines to burst from the ground, wrapping around usr2's bdypart.",
+            "With a powerful chant, usr1 summons a gust of sandy wind that blasts against usr2, scratching their bdypart.",
+            "usr1 pounds the ground, and a shockwave of loose earth travels towards usr2, enveloping their bdypart."
+        ],
+        "crit": [
+            "usr1 calls upon the strength of ancient mountains, causing a massive boulder to roll over usr2, focusing on their bdypart.",
+            "A giant fissure opens in the earth at usr1's command, swallowing usr2 up to their neck before snapping shut on their bdypart.",
+            "usr1 conjures an earthquake, the tremors knocking usr2 off balance and causing a nearby tree to fall towards their bdypart.",
+            "With a thunderous roar, usr1 summons a wave of molten lava that flows rapidly towards usr2, engulfing their bdypart.",
+            "usr1's command causes the metallic ores in the soil to explode upwards, forming sharp spikes that impale usr2's bdypart.",
+            "The ground beneath usr2 erupts, sending a pillar of granite shooting up, smashing into their bdypart.",
+            "usr1 harnesses the power of a subterranean river, which bursts forth, sweeping usr2 off their feet and drenching their bdypart.",
+            "usr1 creates a vortex of gravel and rock, trapping usr2 inside and whirling abrasively against their bdypart.",
+            "A sudden growth of crystalline structures surrounds usr2, closing in quickly and scratching their bdypart.",
+            "usr1 unleashes a barrage of boulder-sized earth clods, each one targeting usr2 with devastating impact on their bdypart."
+        ],
+        "mega-crit": [
+            "After collecting enough earthen shards, usr1 channels their power into a monumental earth dragon that rises and crashes down onto usr2, crushing their bdypart.",
+            "The gathered shards empower usr1 to call forth a massive golem, which lumbers towards usr2 and delivers a crushing blow to their bdypart.",
+            "With the shards vibrating with power, usr1 causes the entire landscape to shift, causing a cliffside to crumble onto usr2, burying their bdypart.",
+            "Earthen shards swirl around usr1, forming a giant hammer of stone that they swing with force, smashing it down onto usr2's bdypart.",
+            "The power of the collected shards allows usr1 to open a chasm beneath usr2, which then snaps shut, trapping their bdypart momentarily.",
+            "usr1, fueled by the shards, summons a storm of razor-sharp rock fragments that converge on usr2, slicing across their bdypart.",
+            "The shards integrate into the ground at usr1's command, causing explosive geysers of mud and stone to erupt under usr2, blasting their bdypart.",
+            "Earthen energy peaks as usr1 commands the roots and soil to entangle usr2, tightening around their bdypart with crushing force.",
+            "usr1 manipulates the collected shards to form a ring of fire-infused stones that encircle and then converge on usr2, focusing on their bdypart.",
+            "Mega-critically charged, usr1 directs the earthen shards to morph into a barrage of stone spikes that launch at high speed towards usr2, impaling their bdypart."
+        ]
+    },
+    "scholar": {
+        "normal": [
+            "usr1 opens an ancient tome filled with arcane symbols, their eyes widening as they uncover forgotten knowledge.",
+            "In a quiet library, usr1 pores over dusty scrolls, piecing together lost histories and mysteries of the past.",
+            "usr1 adjusts their glasses, examining a map of the stars. They jot down notes about celestial alignments and their effects.",
+            "Surrounded by piles of books, usr1 delves deep into the study of alchemical recipes, discovering new combinations of herbs and minerals.",
+            "usr1 sits at a cluttered desk, lamp light flickering as they decipher old manuscripts about legendary artifacts.",
+            "In the hallowed silence of the archives, usr1 uncovers a parchment detailing the rituals of ancient mages, their mind racing with possibilities.",
+            "usr1, surrounded by digital screens, analyzes data from archaeological digs, piecing together the history of a long-lost civilization.",
+            "With a magnifying glass in hand, usr1 studies intricate carvings on an ancient artifact, each symbol revealing a piece of history.",
+            "usr1, sipping on tea, reads through a heavy, leather-bound book about mythical creatures, fascinated by the detailed illustrations.",
+            "usr1 attends a lecture by a renowned historian, eagerly absorbing every word and making extensive notes for later study."
+        ],
+        "crit": [
+            "In a flash of insight, usr1 has an epiphany about the interconnectedness of magic and science, rewriting what is known about both fields.",
+            "While studying ancient texts, usr1 suddenly understands a forgotten language, unlocking secrets hidden for millennia.",
+            "usr1's study of astral charts leads to a breakthrough, predicting a celestial event that hasn't been observed in over a century.",
+            "Amidst old architectural plans, usr1 discovers the blueprint for a legendary lost city, realizing it might still exist.",
+            "During a late-night research session, usr1 pieces together clues that solve a historical mystery long thought unsolvable.",
+            "While examining artifacts, usr1 deciphers a prophecy that foretells a looming conflict, giving them a chance to prevent it.",
+            "usr1's ongoing research into elemental magic leads to a startling discovery about how these forces can be harmonized.",
+            "An epiphany strikes usr1 as they correlate mythological tales with historical events, revealing truths about ancient heroes and villains.",
+            "In an ancient medical text, usr1 finds a cure for a disease thought incurable, potentially saving thousands of lives.",
+            "usr1's study of political treatises results in a theory about governance that could revolutionize the way societies are structured."
+        ]
+    },
+    "warrior": {
+        "normal": [
+            "usr1 swings their large sword in a wide arc, slicing through the air and striking usr2's bdypart.",
+            "With a powerful overhead chop, usr1 brings their sword down hard on usr2, impacting their bdypart with great force.",
+            "usr1 lunges forward, thrusting their sword towards usr2, piercing right through their bdypart.",
+            "A quick and precise slash from usr1's sword leaves a deep cut on usr2's bdypart.",
+            "usr1 executes a series of rapid strikes, each blow targeting usr2's bdypart with increasing ferocity.",
+            "In a fluid motion, usr1 parries an incoming attack and counters with a swift cut to usr2's bdypart.",
+            "usr1 spins around, gaining momentum before their sword crashes into usr2's bdypart with a resounding thud.",
+            "With a feint, usr1 deceives usr2 before delivering a crippling blow to their bdypart.",
+            "usr1's sword glints in the sunlight as they perform a perfect slice, aiming it directly at usr2's bdypart.",
+            "usr1 charges at usr2, sword raised, and with a powerful yell, slashes across usr2's bdypart, drawing a line of red."
+        ],
+        "crit": [
+            "usr1 summons all their strength and delivers a devastating blow with their sword, nearly cleaving usr2 in half at their bdypart.",
+            "With a mighty roar, usr1's sword swing becomes a deadly blur, striking usr2's bdypart with bone-crushing force.",
+            "usr1 performs a legendary sword technique, slicing through the air with such speed and precision that usr2's bdypart is almost surgically severed.",
+            "A critical strike from usr1 sends shockwaves through the battlefield, the sword's edge striking usr2's bdypart with thunderous impact.",
+            "usr1's blade sings as it cuts a wide, devastating swath through usr2's bdypart, leaving nothing but destruction in its wake.",
+            "In a display of unmatched skill, usr1 flips their sword and drives it down into usr2's bdypart, the ground cracking under the force.",
+            "usr1 catches usr2 off guard with a sudden, ferocious attack that not only damages but also demoralizes, focusing on their bdypart.",
+            "With precision born of years of training, usr1's critical strike not only wounds but also perfectly disarms usr2, targeting their bdypart.",
+            "usr1's sword seems to glow with an inner fire as they unleash a powerful slash that burns as well as cuts usr2's bdypart.",
+            "The air itself seems to split as usr1 delivers a strike so powerful, it creates a sonic boom as the sword meets usr2's bdypart."
+        ]
+    },
+    "samurai": {
+        "normal": [
+            "usr1 draws their katana in a swift, fluid motion, slicing the air before making a precise cut on usr2's bdypart.",
+            "With calm precision, usr1 steps forward and delivers a sharp, diagonal slash across usr2's bdypart.",
+            "usr1 performs a quick parry followed by a counter-strike, targeting usr2's bdypart with the tip of their katana.",
+            "In a display of skill, usr1 circles around usr2 and strikes a rapid blow to their bdypart, barely giving them time to react.",
+            "usr1 executes a series of controlled, elegant strikes with their katana, each one aimed carefully at usr2's bdypart.",
+            "With a low stance, usr1 lunges, thrusting their katana forward to pierce usr2's bdypart with deadly accuracy.",
+            "usr1's katana glints ominously under the moonlight as they deliver a silent, slicing strike to usr2's bdypart.",
+            "Moving like a shadow, usr1 closes the distance and unleashes a quick slash that grazes usr2's bdypart, leaving a clean cut.",
+            "usr1 feints to the left, then quickly changes direction, bringing their katana down on usr2's bdypart in a powerful stroke.",
+            "With a battle cry, usr1 charges, katana raised, and slashes horizontally, aiming a deep, sweeping cut at usr2's bdypart."
+        ],
+        "crit": [
+            "usr1 channels the ancient spirit of the samurai, enhancing their strike with incredible force, cleaving through usr2's bdypart as if it were paper.",
+            "With perfect form, usr1 executes a deadly iaijutsu technique, drawing and striking in one fluid motion that critically hits usr2's bdypart.",
+            "usr1's katana arcs through the air with a whistling sound, delivering a cut so precise and deep that it could split usr2's bdypart in two.",
+            "In a single moment of clarity and peak concentration, usr1's strike becomes a blur, impacting usr2's bdypart with both grace and devastation.",
+            "The ground trembles slightly as usr1 unleashes a powerful, resonant strike that not only wounds but also immobilizes usr2 by targeting their bdypart.",
+            "usr1's mastery over their blade shines as they perform a complex maneuver that ends with a critical thrust directly into usr2's bdypart.",
+            "A sudden gust accompanies usr1's movement as they deliver a strike that is both beautiful and deadly, aimed perfectly at usr2's bdypart.",
+            "With the precision of a master calligrapher, usr1's katana signs its deadly script across usr2's bdypart, the damage extensive and critical.",
+            "usr1's katana seems to cut through the very fabric of reality, creating a shockwave as it critically strikes usr2's bdypart.",
+            "As if guided by the spirits of past warriors, usr1's critical strike not only hits but also artistically carves through usr2's bdypart, leaving a tale of pain and awe."
+        ]
+    },
+    "boxer": {
+        "normal": [
+            "usr1 throws a quick jab, landing a sharp punch on usr2's bdypart.",
+            "With agility, usr1 dodges to the side and delivers a solid uppercut to usr2's bdypart.",
+            "usr1 unleashes a flurry of rapid punches, each strike targeting usr2's bdypart with precision.",
+            "A calculated hook from usr1 swings around, connecting heavily with usr2's bdypart.",
+            "usr1 steps back, then lunges forward with a powerful straight punch that hits usr2's bdypart.",
+            "In a defensive stance, usr1 counters usr2's move with a swift cross to their bdypart.",
+            "usr1's footwork dazzles as they maneuver around usr2, landing a punch on their bdypart from an unexpected angle.",
+            "With a burst of energy, usr1 throws a combination, finishing with a strong blow to usr2's bdypart.",
+            "usr1 channels their focus, delivering a precise jab that snaps usr2's head back by striking their bdypart.",
+            "Using the ropes, usr1 rebounds with added momentum to land a heavy punch on usr2's bdypart."
+        ],
+        "crit": [
+            "usr1 measures usr2 carefully, then with a shout, delivers a devastating overhand that instantly knocks usr2 out, targeting their bdypart.",
+            "With a fierce roar, usr1 executes a perfect spinning back fist, catching usr2 off-guard and knocking them out cold by hitting their bdypart.",
+            "usr1 ducks under usr2's swing and counters with a knockout uppercut, lifting usr2 off their feet as it connects with their bdypart.",
+            "In a display of raw power, usr1 lands a crushing body shot that folds usr2 over, effectively knocking them out with impact to their bdypart.",
+            "usr1's timing is impeccable as they slip past usr2's defense and land a knockout hook to their bdypart, sending usr2 spinning.",
+            "The crowd goes wild as usr1 feints left then lands a thunderous right straight, knocking usr2 out with a direct hit to their bdypart.",
+            "usr1's combo culminates in a powerful haymaker that crashes into usr2's bdypart, rendering them unconscious instantly.",
+            "In a critical moment, usr1 steps inside usr2's reach and delivers a lightning-fast knockout blow to their bdypart.",
+            "usr1 catches usr2 as they stumble, finishing with a heavy knockout punch that snaps usr2's head back by impacting their bdypart.",
+            "With clinical precision, usr1 finds an opening and exploits it with a swift, brutal strike to usr2's bdypart, achieving a clean knockout."
+        ]
+    },
+    "criminal": {
+        "normal": [
+            "usr1 sneaks up behind usr2, delivering a quick, sharp blow to their bdypart.",
+            "With cunning agility, usr1 lunges forward, stabbing a concealed weapon into usr2's bdypart.",
+            "usr1 throws a handful of sand into usr2's eyes before striking their bdypart hard with a makeshift club.",
+            "In a dark alley, usr1 ambushes usr2, landing several harsh punches to their bdypart.",
+            "usr1 distracts usr2 with a feint, then quickly knees them in their bdypart.",
+            "From the shadows, usr1 attacks, slashing usr2's bdypart with a razor-sharp blade.",
+            "usr1 catches usr2 off-guard at a vulnerable moment, delivering a crushing blow to their bdypart.",
+            "usr1 executes a swift and brutal takedown, slamming usr2 onto the ground and targeting their bdypart.",
+            "In a ruthless display, usr1 uses brass knuckles to enhance a punch, severely impacting usr2's bdypart.",
+            "usr1, blending into the crowd, suddenly strikes usr2 with a hidden weapon, hitting their bdypart unexpectedly."
+        ],
+        "crit": [
+            "With a maniacal laugh, usr1 delivers a devastating strike with a lead pipe to usr2's bdypart, leaving them writhing in agony.",
+            "usr1 expertly maneuvers into position and executes a bone-crushing strike to usr2's bdypart, knocking them out instantly.",
+            "In a brutal flurry, usr1 overwhelms usr2 with rapid, precise strikes, each more vicious than the last, particularly focusing on their bdypart.",
+            "usr1's cold efficiency shines as they incapacitate usr2 with a series of methodical, disabling blows to their bdypart.",
+            "With ruthless precision, usr1 stabs a hidden dagger deep into usr2's bdypart, twisting it to ensure maximum damage.",
+            "Using the environment to their advantage, usr1 smashes usr2 against a wall, followed by a crippling blow to their bdypart.",
+            "usr1 reveals a shocking level of brutality as they break usr2's bdypart with a horrifying snap.",
+            "The attack by usr1 is so swift and forceful that usr2 barely has time to scream before collapsing, their bdypart critically damaged.",
+            "usr1 performs a perfect, lethal strike, slicing across usr2's bdypart with a bladed weapon, leaving a gory scene.",
+            "In an explosive display of violence, usr1 uses a modified firearm at close range to blast usr2's bdypart, ensuring a critical injury."
+        ],
+        "crime": [
+            "usr1 attempts to pickpocket a distracted bystander, smoothly lifting a wallet without notice.",
+            "Under the cover of darkness, usr1 skillfully bypasses a security system to gain unauthorized entry.",
+            "usr1 forges an official document with such expertise that it's indistinguishable from the real thing.",
+            "Using charm and deceit, usr1 cons a wealthy mark out of a significant sum of money.",
+            "usr1 hacks into a secure network, siphoning off data without leaving a trace.",
+            "In a crowded market, usr1 stealthily cuts a purse from a belt, disappearing into the crowd with their loot.",
+            "usr1 sells counterfeit goods to unsuspecting buyers, turning a tidy profit from the scam.",
+            "With meticulous planning, usr1 orchestrates a smuggling operation across borders, avoiding all checkpoints.",
+            "usr1 engages in a high-stakes game of illegal gambling, bluffing their way to a substantial win.",
+            "During a chaotic event, usr1 manages to steal a valuable piece of artwork, expertly avoiding detection."
+        ],
+        "crime-crit": [
+            "usr1's pickpocketing skills reach a pinnacle as they lift an exceptionally valuable item, outsmarting high security.",
+            "During a complex heist, usr1 expertly cracks a state-of-the-art safe, extracting priceless jewels without a hitch.",
+            "usr1's forgery of a top-level government document not only goes undetected but is used to sway international policies.",
+            "usr1 cons an entire room of investors in a sophisticated scheme, walking away with millions.",
+            "By exploiting a zero-day vulnerability, usr1 pulls off a massive data heist that cripples a major corporation.",
+            "usr1 masterminds a grand theft auto, stealing a luxury sports car right from under the nose of security.",
+            "The counterfeit goods usr1 distributes are mistaken for rare collectibles, fetching a fortune on the black market.",
+            "usr1 orchestrates an elaborate art theft during a high-profile gala, smoothly escaping with a world-renowned masterpiece.",
+            "In an audacious display of hacking prowess, usr1 manipulates financial markets, making a fortune overnight.",
+            "usr1 executes a perfect identity theft, living lavishly under a billionaire's guise for months before anyone notices."
+        ],
+        "crime-fail": [
+            "usr1 tries to pickpocket someone, but clumsily alerts them instead, leading to a chase.",
+            "While attempting to bypass security, usr1 trips an alarm, causing a swift and embarrassing arrest.",
+            "A forgery attempt by usr1 goes horribly wrong, resulting in easily detectable flaws that get them caught.",
+            "usr1's con falls flat when their target turns out to be an undercover cop.",
+            "A failed hacking attempt locks usr1 out of the system, leaving behind enough clues to lead directly to them.",
+            "In a botched purse-snatching, usr1 tangles up in the crowd, allowing their target to easily retrieve their belongings.",
+            "usr1's counterfeit goods are immediately recognized as fakes, leading to a quick detainment by authorities.",
+            "A smuggling attempt by usr1 ends in disaster as the contraband is discovered at a checkpoint.",
+            "usr1 loses a substantial amount of money in an illegal gamble when the game is raided by police.",
+            "usr1's attempt to steal artwork ends with them accidentally setting off the gallery's elaborate security system."
+        ]
+    },
+    "entertainer": {
+        "normal": [
+            "usr1 steps onto the stage, capturing the crowd's attention with a charming opening number.",
+            "With a flourish of their costume, usr1 performs a captivating dance routine, earning applause from the audience.",
+            "usr1 tells a series of witty jokes, keeping the crowd laughing and engaged throughout their set.",
+            "Sitting at the piano, usr1 plays a beautiful melody, drawing appreciative nods and hums from the listeners.",
+            "usr1 performs a dramatic monologue, their expressive voice filling the room and holding the audience spellbound.",
+            "With a magic trick, usr1 pulls a rabbit out of a hat, eliciting gasps and cheers from the spectators.",
+            "usr1 juggles several colorful balls in intricate patterns, keeping the audience's eyes glued to their skillful display.",
+            "usr1 sings a heartfelt ballad, their voice echoing through the venue as the crowd listens in rapt silence.",
+            "Using ventriloquism, usr1 brings a puppet to life, engaging the audience in a humorous dialogue that delights young and old alike.",
+            "usr1 performs an acoustic guitar set, their fingers deftly strumming chords that resonate warmly with the audience."
+        ],
+        "crit": [
+            "usr1 delivers a performance so moving that it brings the audience to tears, leaving a lasting impression of deep emotional resonance.",
+            "With an explosive display of talent, usr1 executes a dance routine that ends in a standing ovation, inspiring young dancers in the crowd.",
+            "usr1's comedic timing is impeccable, resulting in a performance that people talk about for days, spreading joy and laughter beyond the venue.",
+            "Playing a complex classical piece, usr1 receives a thunderous applause, their music inspiring some audience members to pursue their own musical passions.",
+            "usr1's dramatic interpretation of a historical figure is so powerful it inspires a local theater group to adopt the play into their repertoire.",
+            "During a magic show, usr1 performs an illusion so unbelievable that it becomes the highlight of the evening, inspiring awe and wonder.",
+            "usr1 juggles flaming torches with such skill and flair that it ignites a passion for the circus arts among the spectators.",
+            "usr1's vocal performance is so stunning that it is recorded and shared widely, becoming a viral sensation that inspires aspiring singers.",
+            "usr1's ventriloquist act is so innovative that it revives interest in the art form, leading to invitations to perform internationally.",
+            "usr1's guitar solo is so masterful and inspiring that it prompts a local community center to start offering guitar lessons."
+        ]
+    },
+    "nomad": {
+        "normal": [
+            "usr1 brandishes their scimitar, swiftly striking usr2's bdypart with a clean, slicing motion.",
+            "With agile movements, usr1 dashes towards usr2 and delivers a quick slash across their bdypart.",
+            "usr1 twirls their scimitar with expert precision before chopping down on usr2's bdypart.",
+            "In a fluid sequence, usr1 parries an incoming blow and counters with a sharp cut to usr2's bdypart.",
+            "usr1 leaps from a higher ground, descending with their scimitar aimed straight at usr2's bdypart.",
+            "With a deceptive feint, usr1 draws usr2 in, then swiftly cuts across their bdypart.",
+            "usr1's scimitar glints under the sun as they execute a series of rapid strikes, each targeting usr2's bdypart.",
+            "usr1 charges forward, using the momentum to enhance a powerful slash at usr2's bdypart.",
+            "In a display of dexterity, usr1 spins around and delivers a backhanded slice to usr2's bdypart.",
+            "usr1 ducks under usr2's attack and responds with a rising slash, targeting their bdypart."
+        ],
+        "crit": [
+            "With a battle cry, usr1 channels their inner strength and delivers a devastating blow with their scimitar, cleaving usr2's bdypart dramatically.",
+            "usr1's scimitar strikes with such force that it causes a shockwave, critically impacting usr2's bdypart and sending them flying backward.",
+            "In a masterful display of swordsmanship, usr1 performs a deadly dance, ending with a critical strike to usr2's bdypart that leaves them incapacitated.",
+            "usr1 predicts usr2's movement and intercepts them with a powerful thrust of their scimitar, critically piercing usr2's bdypart.",
+            "As the dust settles, usr1 emerges with a silent slash that critically wounds usr2's bdypart, the precision of the strike evident.",
+            "With the speed of the desert wind, usr1's scimitar slices through the air, landing a critical, slicing blow on usr2's bdypart.",
+            "usr1's scimitar arcs beautifully yet deadly across the battlefield, delivering a blow that critically bisects usr2's bdypart.",
+            "Under the moonlight, usr1's scimitar seems to glow as they deliver a swift, critical strike that cleanly severs usr2's bdypart.",
+            "In a blink of an eye, usr1 closes the distance and unleashes a fury of slashes, the final one critically striking usr2's bdypart with lethal precision.",
+            "With a roar of determination, usr1 swings their scimitar downward in a mighty arc, critically smashing through usr2's defense and striking their bdypart."
+        ]
+    } ,
+    "hunter": {
+        "normal": [
+            "usr1 takes careful aim and fires an arrow, striking usr2's bdypart with precision.",
+            "With a steady hand, usr1 releases an arrow that whistles through the air, hitting usr2's bdypart.",
+            "usr1 camouflages into the surroundings, then shoots an arrow that silently pierces usr2's bdypart.",
+            "From a hidden vantage point, usr1 launches an arrow that arcs beautifully before striking usr2's bdypart.",
+            "usr1 draws their bow with a swift motion, sending an arrow flying straight into usr2's bdypart.",
+            "In the blink of an eye, usr1 fires two quick arrows, both targeting usr2's bdypart.",
+            "usr1 uses the wind to their advantage, guiding an arrow to land a distant shot on usr2's bdypart.",
+            "With unmatched focus, usr1 fires an arrow that splits a previous one, continuing to usr2's bdypart.",
+            "usr1 performs a rolling maneuver and shoots, hitting usr2's bdypart from an unexpected angle.",
+            "Under moonlight, usr1's arrow finds its mark, embedding deeply into usr2's bdypart.",
+            "usr1 ascends a tree swiftly, then shoots an arrow downward, striking usr2's bdypart effectively.",
+            "With a rapid sidestep, usr1 dodges an attack and retaliates with an arrow to usr2's bdypart.",
+            "From across the field, usr1's arrow soars, hitting usr2's bdypart with deadly accuracy.",
+            "usr1 kneels for stability, takes aim, and fires an arrow that zips directly to usr2's bdypart.",
+            "As rain falls, usr1's concentration doesn't waver; their arrow pierces through the downpour into usr2's bdypart."
+        ],
+        "crit": [
+            "usr1's critical shot glows faintly, marking usr2 after striking their bdypart with a specially crafted arrow.",
+            "In a moment of perfect clarity, usr1 releases an arrow that not only hits usr2's bdypart but also leaves a luminous trail, marking them.",
+            "usr1 whispers an ancient hunter's chant, enhancing their arrow which critically hits and marks usr2's bdypart for follow-up attacks.",
+            "With a piercing whistle, usr1's arrow embeds deeply in usr2's bdypart, leaving a glowing mark that signals vulnerability.",
+            "usr1 shoots an arrow that splits the air with a sharp twang, marking usr2's bdypart critically, readying them for the kill.",
+            "As thunder roars, usr1's arrow strikes usr2's bdypart with such force it leaves a mark glowing with energy.",
+            "usr1 fires a barbed arrow, hitting usr2's bdypart critically and marking them with an aura that draws attention.",
+            "With the precision of a master archer, usr1's critical hit not only damages but also paints usr2's bdypart with a target mark.",
+            "usr1 launches a critical shot infused with magic, marking usr2's bdypart while dealing significant damage.",
+            "A critical hit from usr1’s arrow leaves a pulsating mark on usr2’s bdypart, a beacon for subsequent attacks.",
+            "usr1’s arrow, carved with runes, flies true and marks usr2’s bdypart with a mystical sigil upon striking critically.",
+            "In a display of legendary skill, usr1’s critical shot leaves a trail of light leading to the marked bdypart of usr2.",
+            "The arrow released by usr1 embeds into usr2’s bdypart, leaving behind a luminescent mark that foretells further peril.",
+            "usr1's arrow unleashes a burst of light upon impact, marking usr2’s bdypart and setting the stage for a devastating follow-up.",
+            "With a flare visible across the battlefield, usr1’s critical strike marks usr2’s bdypart, highlighting them for all to target."
+        ]
+    },
+    "tamer": {
+        "normal": [
+            "usr1 nocks an arrow, draws back their bow, and releases, the arrow whistling through the air to strike usr2's bdypart.",
+            "With a calm presence, usr1 uses their bow to fire a shot that arcs gracefully before hitting usr2's bdypart.",
+            "usr1 steps lightly through the underbrush, firing a quick arrow that nicks usr2's bdypart as they command a rabbit to distract.",
+            "From the treetops, usr1 sends an arrow soaring downward, striking usr2's bdypart, while a squirrel scurries around their feet.",
+            "usr1 kneels, takes careful aim with their bow, and lets loose an arrow that flies true to usr2's bdypart as a fox watches silently.",
+            "In a fluid motion, usr1 launches two arrows in quick succession; one grazes usr2's bdypart, the other distracts as a bird swoops down.",
+            "usr1 blends into their surroundings, then suddenly appears to loose an arrow at usr2's bdypart, while a deer nudges them from behind.",
+            "With the sun behind them, usr1 shoots an arrow that glints brightly before impacting usr2's bdypart, as a raccoon steals usr2's attention.",
+            "usr1, perched upon a high rock, draws their bow and targets usr2's bdypart, while a snake slithers quietly towards usr2.",
+            "A whisper from usr1 sends a dove flying overhead as a distraction while they aim and fire an arrow at usr2's bdypart.",
+            "usr1 hums a tune that calms the woods, firing an arrow that zips through the trees to hit usr2's bdypart as a bear growls nearby.",
+            "Silently, usr1 commands a small pack of wolves to circle around as they shoot an arrow towards usr2's bdypart.",
+            "With precision, usr1 fires their bow from behind cover, the arrow striking usr2's bdypart as a skunk readies its spray.",
+            "usr1's arrow slices through a gust of wind, hitting usr2's bdypart, while a bobcat pounces near usr2 to startle.",
+            "Amidst falling leaves, usr1 looses an arrow that spirals before hitting usr2's bdypart, accompanied by the chatter of monkeys."
+        ],
+        "crit": [
+            "At usr1's silent command, a majestic eagle dives from the sky, talons outstretched, striking a critical blow to usr2's bdypart.",
+            "With a flick of usr1's wrist, a formidable wolf pack launches a synchronized attack, critically mauling usr2's bdypart.",
+            "usr1 signals subtly; a bear charges out, delivering a powerful swipe that critically impacts usr2's bdypart with brutal force.",
+            "Under usr1's guidance, a stealthy panther leaps from the shadows, delivering a critical strike with its sharp claws to usr2's bdypart.",
+            "A sharp whistle from usr1 cues a giant stag to charge, its antlers goring usr2's bdypart critically, pinning them momentarily.",
+            "usr1's connection with the wild calls forth a swarm of bees, which envelop usr2, stinging their bdypart critically with coordinated precision.",
+            "At usr1’s nod, a boar with razor-sharp tusks charges through the underbrush, goring usr2’s bdypart critically, leaving them staggered.",
+            "usr1 raises an arm, signaling a hawk to swoop down in a deadly dive, its beak striking a critical hit on usr2's bdypart.",
+            "The ground rumbles on usr1's command as a massive rhino charges at usr2, critically striking their bdypart with its horn.",
+            "usr1's silent gesture summons a serpent that delivers a sudden, venomous bite to usr2's bdypart, critically weakening them.",
+            "With a calm whisper, usr1 directs a lynx that pounces from a high ledge, landing a critical blow on usr2’s bdypart with its claws.",
+            "usr1 makes a subtle hand signal, and an otter swiftly approaches usr2, delivering a surprisingly critical bite to their bdypart.",
+            "A coyote, called by usr1, stealthily approaches and delivers a critical bite to usr2's bdypart, then vanishes back into the brush.",
+            "usr1 orchestrates a critical assault as a porcupine launches quills with pinpoint accuracy at usr2's bdypart, each quill hitting with unexpected force.",
+            "On usr1's command, a group of mountain goats charge down the slope, ramming into usr2 with focused aggression, critically striking their bdypart."
+            ]
+        },
+    "gunner": {
+        "normal": [
+            "usr1 quickly draws their pistol and fires a shot, grazing usr2's bdypart.",
+            "With a steady aim, usr1 squeezes the trigger, sending a bullet whizzing close to usr2's bdypart.",
+            "usr1 ducks behind cover, then pops out to fire a rapid burst towards usr2, hitting their bdypart.",
+            "In a fluid motion, usr1 reloads and fires a precise shot at usr2's bdypart from across the room.",
+            "usr1, with a flick of their wrist, spins the gun before firing, the bullet striking usr2's bdypart.",
+            "Using the shadows to their advantage, usr1 takes a stealthy shot at usr2, the bullet silently hitting their bdypart.",
+            "usr1's hand steadies, their focus sharp; they take a breath and fire, the bullet piercing usr2's bdypart.",
+            "From a kneeling position, usr1 aims and shoots, effectively hitting usr2's bdypart with a well-placed bullet.",
+            "usr1 maneuvers through the chaos, finds a clear line, and fires, the bullet impacting usr2's bdypart.",
+            "usr1 takes a quick sidestep, dodges an incoming attack, and returns fire, hitting usr2's bdypart.",
+            "In a daring move, usr1 slides across the floor, shooting as they go, striking usr2's bdypart.",
+            "usr1, from a high vantage point, takes careful aim and fires, the bullet traveling downwards into usr2's bdypart.",
+            "Amidst a spray of bullets, usr1 manages to focus and land a precise hit on usr2's bdypart.",
+            "usr1 leans out from an alleyway, quickly fires two shots, both aimed at usr2's bdypart.",
+            "As the smoke clears, usr1 identifies their target and fires, successfully hitting usr2's bdypart."
+        ],
+        "crit": [
+            "In a moment of deadly precision, usr1 executes a perfect headshot, instantly neutralizing the threat posed by usr2.",
+            "With ice-cold focus, usr1 lines up their sights and delivers a clean, swift headshot that drops usr2 in their tracks.",
+            "usr1 adjusts their aim slightly, pauses, and then unleashes a shot. The bullet screams across the space, landing a critical headshot that silences usr2.",
+            "The echo of the gunshot is sharp, and so is the impact; usr1's bullet drills into usr2's head, a textbook execution.",
+            "As usr2 moves to take cover, usr1 tracks, fires, and scores a headshot, the bullet striking with lethal efficiency.",
+            "usr1's tactical training shines as they squeeze the trigger, delivering a precise, devastating headshot to usr2.",
+            "The air splits with the sound of usr1's gunshot, a critical strike as the bullet pierces usr2's head, dropping them instantly.",
+            "Under the dim light, usr1’s aim proves deadly. They fire, and the bullet finds its mark, a devastating headshot that stops usr2 cold.",
+            "In a split second of clarity and opportunity, usr1's bullet zooms straight to its target, achieving a critical headshot that stuns all who witness.",
+            "usr1 whispers a challenge, fires, and the bullet arcs beautifully, culminating in a critical headshot that incapacitates usr2.",
+            "With no hesitation, usr1 fires a headshot that is both sudden and devastating, dropping usr2 where they stand.",
+            "The sound of the shot barely precedes the fall of usr2, taken down by a critical headshot from usr1's steady hand.",
+            "usr1 takes a calculated risk, fires under pressure, and achieves a headshot, the bullet smashing into usr2's head with fatal precision.",
+            "A quick peek, a quicker shot; usr1’s bullet flies true, resulting in a critical headshot that leaves usr2 motionless.",
+            "usr1's precision is unmatched; with a single pull of the trigger, they deliver a headshot that critically impacts usr2, ending the confrontation."
+        ]
+    },
+    "flameborn": {
+        "normal": [
+            "usr1 clenches their fist, and flames burst forth, engulfing usr2's bdypart in a sudden blaze.",
+            "With a wave of their hand, usr1 sends a whip-like flame lashing across the air, scorching usr2's bdypart.",
+            "usr1 stomps on the ground, causing a trail of fire to race towards usr2, wrapping around their bdypart.",
+            "The air around usr1 heats up intensely as they project a searing blast of fire towards usr2's bdypart.",
+            "usr1 draws a fiery circle in the air with their fingers, casting a ring of fire that encircles and burns usr2's bdypart.",
+            "With a quick spin, usr1 releases a swirling vortex of flames that spirals toward usr2, focusing on their bdypart.",
+            "usr1 snaps their fingers, and small sparks fly out, quickly igniting into a large flame that engulfs usr2's bdypart.",
+            "usr1 channels their inner heat and exhales a stream of blue fire, directly targeting usr2's bdypart.",
+            "Flames flicker around usr1's eyes as they concentrate, sending a focused beam of fire slicing through the air to usr2's bdypart.",
+            "usr1 claps their hands together, then pulls them apart to reveal a ball of fire, which they hurl at usr2's bdypart.",
+            "With an upward flick of their wrist, usr1 summons a pillar of flame from the ground beneath usr2, scorching their bdypart.",
+            "usr1 gestures towards the sky, causing small meteors of burning rock to fall around usr2, one striking their bdypart.",
+            "usr1's heartbeat intensifies, and with each beat, a pulse of fire emanates outward, singeing usr2's bdypart.",
+            "usr1 reaches out their hand, and a tether of flame shoots forth, wrapping around and burning usr2's bdypart.",
+            "With a roar, usr1 unleashes a wave of fire that sweeps across the battlefield, catching usr2's bdypart in its fiery grasp."
+        ],
+        "crit": [
+            "usr1's body glows with an intense light as they channel the core of their fiery essence, releasing a devastating explosion of flames that completely incinerates usr2's bdypart.",
+            "The ground cracks under usr1's feet as they summon a massive firestorm, the central column of fire striking usr2's bdypart with catastrophic heat.",
+            "usr1's eyes blaze with a supernatural flame as they direct a dragon-shaped torrent of fire towards usr2, critically burning their bdypart with legendary force.",
+            "With a thunderous chant, usr1 calls upon the ancient spirits of fire, summoning a fiery phoenix that dives and explodes on usr2's bdypart, leaving only ashes.",
+            "usr1 draws the heat from the surroundings, concentrating it into a single, overwhelming inferno that blasts usr2's bdypart, leaving a charred mark.",
+            "As usr1 chants in an ancient tongue, the air ignites into a swirling inferno, concentrating its fury on usr2's bdypart.",
+            "With a dramatic flourish, usr1 summons a column of fire from beneath the earth, engulfing usr2's bdypart in flames that rise skyward.",
+            "usr1's command causes the flames to leap higher, forming a fiery lion that pounces on usr2's bdypart, leaving searing wounds.",
+            "A vortex of fire forms around usr1's outstretched hands, then rushes forward in a fiery wave that crashes over usr2's bdypart.",
+            "usr1 harnesses the power of a volcanic eruption, sending a lava-like stream of fire to consume usr2's bdypart."
+        ],
+        "overheat": [
+            "As the flames around usr1 reach an uncontrollable intensity, they erupt in a fiery explosion, causing additional damage around usr2's bdypart.",
+            "usr1's internal heat becomes too much to contain, releasing a burst of flames that scorch the ground and intensify the damage to usr2's bdypart.",
+            "Overheating after their critical attack, usr1 unleashes a shockwave of fire that spreads rapidly, catching everything near usr2 aflame.",
+            "The overheat from usr1's flames causes nearby objects to ignite spontaneously, creating a dangerous, fiery environment around usr2.",
+            "In the aftermath of their critical strike, usr1's excess energy manifests as a series of small explosions, each one adding burns to usr2's surroundings.",
+            "The air crackles with heat as usr1's body radiates an intense warmth, sending waves of fire radiating outward, catching usr2's bdypart in a secondary blaze.",
+            "usr1's control slips as their flames surge uncontrollably, resulting in a fiery burst that lashes out wildly, striking usr2 and the area around them.",
+            "As usr1 focuses their power, the excess flames coil like serpents, striking out at usr2's bdypart with unexpected ferocity.",
+            "The ground beneath usr1 glows red-hot, and sudden geysers of flame burst forth, adding a searing touch to the damage dealt to usr2's bdypart.",
+            "usr1's flames gather into a fiery orb that explodes in a radius, sending burning embers flying, which rain down around usr2, causing additional burns."
+        ]
+    },
+    "ashen sage": {
+        "normal": [
+            "usr1 gestures subtly, and a swirl of cinders sweeps towards usr2, lightly dusting their bdypart with hot ash.",
+            "With a flick of their wrist, usr1 conjures a cloud of ash that envelopes usr2's bdypart, obscuring their vision and scorching their skin.",
+            "usr1 stamps the ground, causing a burst of ash to rise and drift like a wave towards usr2, settling on their bdypart with a sizzle.",
+            "The air around usr1 thickens with ash as they direct a dense column towards usr2, coating their bdypart in a layer of fine, hot dust.",
+            "usr1 claps their hands, and a ring of smoldering ash erupts outward, circling usr2 and singeing their bdypart.",
+            "With a sweeping motion, usr1 sends a carpet of cinders slithering across the ground, engulfing usr2's bdypart in burning debris.",
+            "usr1 raises a hand, and from it, a spiral of fine ash spins out, wrapping around usr2's bdypart and leaving a trace of burns.",
+            "The ground beneath usr2's feet becomes a bed of hot coals as usr1 manipulates the earth, heating up their bdypart uncomfortably.",
+            "usr1's eyes glow with a fiery intensity, and they exhale a breath of scorching ash that blankets usr2's bdypart.",
+            "A subtle twist of usr1's fingers causes ash to erupt from small fissures in the ground, targeting usr2's bdypart with precision.",
+            "With a roar, usr1 summons an ash storm that obscures vision and burns all it touches, focusing on usr2's bdypart.",
+            "usr1 whispers an incantation, causing ash to form into sharp, cutting whirlwinds that slice at usr2's bdypart.",
+            "The ashes around usr1 animate into fiery serpents that lash out at usr2, biting and burning their bdypart.",
+            "usr1 performs a dance of flames and ash, directing the performance towards usr2, engulfing their bdypart in fiery debris.",
+            "usr1 casts a spell that causes the ashes beneath usr2 to ignite suddenly, blazing intensely around their bdypart."
+        ],
+        "crit": [
+            "usr1 chants in an ancient tongue, and the ashes around them swirl violently before being hurled at usr2's bdypart with devastating force.",
+            "With a commanding shout, usr1 causes the ashes beneath usr2's feet to explode upwards, enveloping them in a cloud of superheated cinders that sear their bdypart critically.",
+            "usr1's mastery of ash culminates in a massive vortex that captures usr2 within, their bdypart bombarded by a relentless storm of cinders.",
+            "In a dramatic display of power, usr1 summons a phoenix made entirely of ashes, which dives at usr2 and explodes on contact with their bdypart, leaving a mark of charred flesh.",
+            "usr1 performs a complex ritual dance, and the result is a rain of fiery ash that descends upon usr2, focusing intensely on their bdypart and leaving it scorched.",
+            "A thunderous command from usr1 ignites the air itself, turning the ash into a wave of flame that crashes over usr2, targeting their bdypart.",
+            "usr1's fingertips glow, casting shadows as they flick them towards usr2, directing a sharp lance of ash that pierces their bdypart critically.",
+            "With an eerie calm, usr1 conjures a swirling ash dragon that encircles and then savagely attacks usr2, focusing its fiery breath on their bdypart.",
+            "usr1's words turn to a tangible curse, causing ash to harden and shoot towards usr2 like bullets, critically hitting their bdypart.",
+            "usr1 raises their arms, and a tempest of ash and fire envelops usr2, the intensity of the heat critically burning their bdypart."
+        ],
+        "overheat": [
+            "As usr1 reaches the peak of their power, the surrounding ashes respond, swirling towards them and being absorbed into their form, enhancing them.",
+            "The overheat causes the ash in the air to become magnetically attracted to usr1, who absorbs it, their skin taking on a glowing, ember-like quality.",
+            "Excess energy from usr1's critical attack causes nearby ashes to coalesce and rush towards them, granting them a temporary shield of swirling cinders.",
+            "The ground's cinders move towards usr1 as if alive, wrapping around them and boosting their fiery energy, soothing them.",
+            "Following a powerful spell, usr1's body acts as a beacon, drawing in all nearby ash and cinders, which cloak them in a shimmering aura of heat and light.",
+            "Overheating intensifies around usr1, causing the ambient temperature to spike as they absorb the fiery essence of the ash, fueling their next magical onslaught.",
+            "The air crackles with fiery energy as usr1 becomes the epicenter of a thermal vortex, pulling in ash and enhancing their mystical powers.",
+            "usr1's command of the cinders reaches a climax as they draw in a whirlwind of ash, which fuses into their very being, augmenting their control over fire.",
+            "As usr1 channels their overheat, the ground beneath them glows red-hot, with ash rising and seeping into their pores, strengthening their fiery attacks.",
+            "The fiery aura around usr1 pulsates with power as they absorb the floating ashes, each particle enhancing their magic with explosive potential.",
+            "usr1's presence causes the ashes from recent fires to lift from the ground, swirling around them and imbuing them with a protective mantle of flame.",
+            "In the aftermath of their critical strike, usr1's hands draw in the scattered cinders, weaving them into a fabric of flame that coats their body.",
+            "The ashen aftermath of usr1's spells begins to orbit them, each speck of cinder adding to their reservoir of fiery energy, ready for release.",
+            "Heat shimmers in the air as usr1's overheat draws the ashes of the fallen back to life, circling them as if honoring a pyromancer of old.",
+            "As usr1 absorbs the lingering ash, their eyes ignite with an inner fire, signaling a peak in their mystical prowess and readiness for further combat."
+        ]
+    }                            
 }
-
