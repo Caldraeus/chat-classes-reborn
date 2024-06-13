@@ -28,7 +28,8 @@ class utils_and_events(commands.Cog):
         On bot load, update some global bot variables.
         These are cached for frequent access without needing to query the DB repeatedly.
         """
-        await self.initialize_user_aps()
+        if self.bot.user_aps == {}:
+            await self.initialize_user_aps()
 
         logging.info("Bot is ready and data has been loaded!")
 

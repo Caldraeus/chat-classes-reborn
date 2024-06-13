@@ -3,21 +3,48 @@ from discord.ext import commands, tasks
 from discord import app_commands
 import aiosqlite
 from datetime import datetime, timezone, timedelta
+import pickle
+import asyncio
+import signal
 
 class economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bot.claimed = []
+        self.variables_to_save = {
+            'claimed': []
+        }
+        
+        # Load state variables asynchronously and setup defaults
+        asyncio.create_task(self.load_and_initialize_variables())
+
         self.rollover_task.start()
-        self.update_status.start()
+
+    async def load_and_initialize_variables(self):
+        try:
+            with open('data/economy_state.pkl', 'rb') as file:
+                data = pickle.load(file)
+                for key in self.variables_to_save:
+                    setattr(self.bot, key, data.get(key, self.variables_to_save[key]))
+        except FileNotFoundError:
+            self.set_default_values()
+
+    def set_default_values(self):
+        # Set default values for all your variables
+        self.bot.claimed = []
+        # Initialize additional variables if needed
+
+    async def save_variables(self):
+        data = {key: getattr(self.bot, key) for key in self.variables_to_save}
+        with open('data/economy_state.pkl', 'wb') as file:
+            pickle.dump(data, file, protocol=pickle.HIGHEST_PROTOCOL)
 
     def cog_unload(self):
         self.rollover_task.cancel()
-        self.update_status.cancel()
 
     async def reset_user_class_specific(self):
         class_cog = self.bot.get_cog('action_core')
-        class_cog.nomad_homes.clear()
+        if class_cog:
+            class_cog.nomad_homes.clear()
 
     @tasks.loop(hours=24)
     async def rollover_task(self):
@@ -40,17 +67,18 @@ class economy(commands.Cog):
 
     @app_commands.command(name="daily", description="Claim your daily rewards.")
     async def daily(self, interaction: discord.Interaction):
+        amount = 200
         user_id = str(interaction.user.id)
         if user_id in self.bot.claimed:
             await interaction.response.send_message("You have already claimed your daily rewards today!", ephemeral=True)
             return
 
         async with aiosqlite.connect('data/main.db') as db:
-            await db.execute("UPDATE users SET gold = gold + 100, coolness = coolness + 50 WHERE user_id = ?", (user_id,))
+            await db.execute("UPDATE users SET gold = gold + ?, coolness = coolness + 50 WHERE user_id = ?", (amount, user_id,))
             await db.commit()
 
         self.bot.claimed.append(user_id)
-        await interaction.response.send_message("⭐ | You have claimed your daily rewards of 100 gold and 50 coolness!", ephemeral=True)
+        await interaction.response.send_message(f"⭐ | You have claimed your daily rewards of {amount} gold and 50 coolness!", ephemeral=True)
 
     @tasks.loop(minutes=1)
     async def update_status(self):

@@ -33,5 +33,10 @@
         "positive":true,
         "message":false,
         "description":"You're burning hot! The next attack against you is blocked, and you convert it into coolness!"
+    },
+    "fatigued":{
+        "positive":false,
+        "message":false,
+        "description":"You're feeling really tired... your next action cost 1 extra AP."
     }
 }

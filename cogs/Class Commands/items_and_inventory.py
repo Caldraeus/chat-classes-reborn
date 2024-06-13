@@ -12,7 +12,9 @@ class items_and_inventory(commands.Cog):
         self.item_actions = {
             "Hot Dog": self.use_simple_item,
             "Snake Oil": self.use_simple_item,
-            "NFT":self.use_simple_item
+            "NFT":self.use_simple_item,
+            "World War II Souvenir":self.use_simple_item,
+            "Monster Energy":self.use_simple_item
         }
 
     item_group = discord.app_commands.Group(name="item", description="Manage your items")
@@ -312,19 +314,24 @@ class items_and_inventory(commands.Cog):
             self.bot.user_aps[interaction.user.id] += 2
             await interaction.response.send_message("🌭 | You consume your delicious Hot Dog! Yum! **(+2 AP)**")
             await h.remove_item(interaction.user.id, item_id)
+        elif item_name == "Monster Energy":
+            self.bot.user_aps[interaction.user.id] += 5
+            await interaction.response.send_message("<:monster:1250620428435587103> | You drink your monster energy... it's energizing! Now you have a bit more energy. **(+5 AP)**")
+            await h.remove_item(interaction.user.id, item_id)
         elif item_name == "Snake Oil":
             cog = self.bot.get_cog('statuses')
             random_status = random.choice(list(cog.status_effects.keys()))
             random_stacks = random.randint(1,20)
             await interaction.response.send_message(f"🐍 | You drink your snake oil... holy hell, what was in that stuff!? You feel like you're... {random_status}!?")
             await cog.apply_status_effect(interaction.user.id, random_status, random_stacks)
+            await h.remove_item(interaction.user.id, item_id)
         elif item_name == "NFT":
             user_class = await h.get_user_class(interaction.user.id)
             if user_class == 'Trader':
                 await interaction.response.send_message(f'Woah there buddy, as a Trader, you wouldn\'t lay a finger on NFT\'s, since they\'re a scam and all. Try selling them to someone instead!', ephemeral=True)
                 return
             
-            is_scammed = random.randint(1, 20) <= 20
+            is_scammed = random.random() <= 0.8
 
             amount = random.randint(100, 1000)
 
@@ -336,6 +343,20 @@ class items_and_inventory(commands.Cog):
                 await interaction.response.send_message(f"🐒 | You take your NFT and... do whatever people do with NFT's! It's a success! You gain {amount} G.\n\nBut honestly? NFT's suck. That's why you just lost that same amount in coolness.")
                 await h.add_gold(interaction.user.id, amount)
                 await h.add_coolness(interaction.user.id, -amount)
+            await h.remove_item(interaction.user.id, item_id)
+        elif item_name == "World War II Souvenir":
+            
+            exploded = random.random() <= 0.25
+
+            amount = random.randint(200, 1500)
+
+            if exploded:
+                await interaction.response.send_message(f"💥 | You take out your World War II Souvenir and... oh, fuck this has been a bomb the whole time? Your souvenir explodes! You live, but that explosion was not cool, man. You lose {amount*3} coolness.")
+                await h.add_coolness(interaction.user.id, -amount*3)
+                await h.remove_item(interaction.user.id, item_id)
+            else:
+                await interaction.response.send_message(f"💣 | You take your World War II Souvenir out and show it off. Wow! That's pretty cool, especially the soft ticking noise! You put your souvenir back into your pocket for later. (**+{amount} Coolness!**)")
+                await h.add_coolness(interaction.user.id, amount)
 
     # Example method for an item requiring a target
     async def use_targeted_item(self, interaction, item_name):

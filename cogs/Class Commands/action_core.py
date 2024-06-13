@@ -7,23 +7,38 @@ import random
 import sys
 from ..views import nc_class_views as v
 import math
-
+import asyncio
+import signal
+import pickle
 
 class action_core(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.variables_to_save = {
+            'pyrolevels': {},
+            'waterlevels': {},
+            'earth_shards': {},
+            'nomad_homes': {},
+            'ashen_sage_cinders': {},
+            'soulcrusher_souls': {}
+        }
 
+        # Load state variables asynchronously and setup defaults
+        asyncio.create_task(self.load_and_initialize_variables())
+
+        # Initialize your action handlers and other structures
         self.action_handlers_with_target = {
-                "blast": self.handle_blast,
-                "slice": self.handle_slice,
-                "ignite": self.handle_ignite,
-                "douse": self.handle_douse,
-                "shank": self.handle_shank,
-                "shoot": self.handle_shoot,
-                "stone": self.handle_stone,
-                "punch": self.handle_punch,
-                "trade": self.handle_trade
-            }
+            "blast": self.handle_blast,
+            "slice": self.handle_slice,
+            "ignite": self.handle_ignite,
+            "douse": self.handle_douse,
+            "shank": self.handle_shank,
+            "shoot": self.handle_shoot,
+            "stone": self.handle_stone,
+            "punch": self.handle_punch,
+            "trade": self.handle_trade
+        }
+
         self.action_handlers_without_target = {
             "study": self.handle_study,
             "crime": self.handle_crime,
@@ -32,65 +47,46 @@ class action_core(commands.Cog):
             "consume": self.handle_consume
         }
 
+        # Load JSON data for class-specific hooks
         self.class_actions = {}
+        self.load_class_actions_from_json()
+
+    async def load_and_initialize_variables(self):
+        try:
+            with open('data/action_core_state.pkl', 'rb') as file:
+                data = pickle.load(file)
+                for key in self.variables_to_save:
+                    setattr(self, key, data.get(key, self.variables_to_save[key]))
+        except FileNotFoundError:
+            self.set_default_values()
+
+    def set_default_values(self):
+        # Set default values for all your variables
+        self.pyrolevels = {}
+        self.waterlevels = {}
+        self.earth_shards = {}
+        self.nomad_homes = {}
+        self.ashen_sage_cinders = {}
+        self.soulcrusher_souls = {}
+        # Initialize additional variables if needed
+
+    async def save_variables(self):
+        try:
+            data = {key: getattr(self, key) for key in self.variables_to_save}
+            with open('data/action_core_state.pkl', 'wb') as file:
+                pickle.dump(data, file)
+            print(f"{self.__class__.__name__}: Variables saved successfully.")
+        except Exception as e:
+            print(f"{self.__class__.__name__}: Failed to save variables due to {e}")
+
+
+    def load_class_actions_from_json(self):
         with open('data/class_hooks.json', "r") as f:
             self.hooks_data = json.loads(f.read())
 
-        # BELOW: All tracking lists for class status effects.
-        self.subjects = [
-            "magic",
-            "abjuration magic",
-            "conjuration magic",
-            "calling magic",
-            "creation",
-            "healing",
-            "summoning",
-            "teleportation",
-            "divination magic",
-            "scrying magic",
-            "enchantment magic",
-            "charming magic",
-            "compulsion magic",
-            "evocation magic",
-            "figment magic",
-            "illusions",
-            "phantasms",
-            "shadows",
-            "transmutation",
-            "polymorphing",
-            "the universe",
-            "dogs",
-            "cats",
-            "alchemy",
-            "nature",
-            "thaumaturgy",
-            "transformation",
-            "fighting"
-        ]
-        self.pyrolevels = {}
-        self.pyro_intensities = [
-            (25, "kindles lightly"),
-            (50, "burns"),
-            (75, "burns strongly"),
-            (99, "roars"),
-            (150, "is about to burst")
-        ]
-
-        self.water_intensities = [
-            (25, "sits lowly"),
-            (50, "sits comfortably"),
-            (75, "sits highly"),
-            (99, "is close to overflowing"),
-            (150, "starts to spill")
-        ]
-        self.waterlevels = {}
-
-        self.earth_shards = {}
-        
-        self.nomad_homes = {}
-
-        self.ashen_sage_cinders = {}
-        # ABOVE: All tracking lists for class status effects.
+    def cog_unload(self):
+        """Handle tasks on cog unload."""
+        asyncio.create_task(self.save_variables())
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -244,6 +240,10 @@ class action_core(commands.Cog):
             await interaction.response.send_message('🔥 | You have no cinders to consume.', ephemeral=True)
         else:
             cinder_count = self.ashen_sage_cinders.get(interaction.user.id, 0)
+
+            if cinder_count >= 10:
+                await h.grant_achievement(interaction.channel, interaction.user.id, 9)
+
             ap_regain = await self.calculate_ap_gain_ashen(cinder_count)
             gold = round((ap_regain ** 2)**1.5)
             await interaction.response.send_message(f'🔥 | You consume your {cinder_count} cinders... you regain **{ap_regain}** AP and gain **{gold}** Gold!', ephemeral=False)
@@ -291,18 +291,46 @@ class action_core(commands.Cog):
         # Example critical hit check, simplified
         is_critical = await h.crit_handler(self.bot, interaction.user, target, interaction)
 
-        if user_class == 'Apprentice' or user_class == 'Dark Mage':
+        additional_msg = ""
+        hook = ""
+
+        if user_class in ['Apprentice', 'Dark Mage', 'Toxinmancer', 'Soulcrusher']:
+            # Handle critical hits
             if is_critical:
                 hook = random.choice(self.hooks_data[user_class.lower()]["crit"])
-                additional_msg = "**✨[CRITICAL]✨** + 100 Coolness | "
+                if user_class == 'Toxinmancer':
+                    hook += '\n\nusr2 is badly *poisoned*!'
+                    additional_msg = "**<:poison:1250164881139826738>[CRITICAL]<:poison:1250164881139826738>** + 100 Coolness |"
+                    await self.bot.get_cog("statuses").apply_status_effect(target.id, 'poisoned', stacks=random.randint(2,4))
+                elif user_class == 'Soulcrusher':
+                    if target.id in self.soulcrusher_souls.get(interaction.user.id, []):
+                        # Soul already claimed, now crushed
+                        hook = random.choice(self.hooks_data[user_class.lower()]["soulcrush"]) + '\n\nusr2 feels *Fatigued!*'
+                        additional_coolness = 500 + 100 * (len(self.soulcrusher_souls[interaction.user.id]) - 1)
+                        additional_msg = f"**💥[SOUL CRUSHED]💥** + {additional_coolness} Coolness | "
+                        await h.add_coolness(interaction.user.id, additional_coolness)
+                        await self.bot.get_cog("statuses").apply_status_effect(target.id, 'fatigued', stacks=(len(self.soulcrusher_souls[interaction.user.id])))
+                        self.soulcrusher_souls[interaction.user.id].remove(target.id)  # Remove the soul after crushing
+                        if not self.soulcrusher_souls[interaction.user.id]:  # Remove key if list is empty
+                            del self.soulcrusher_souls[interaction.user.id]
+                    else:
+                        # Attempt to steal the soul
+                        self.soulcrusher_souls.setdefault(interaction.user.id, []).append(target.id)
+                        additional_msg = "**💀[SOUL STOLEN]💀** + 100 Coolness | "
+                        await h.add_coolness(interaction.user.id, 100)
+                else:
+                    additional_msg = "**✨[CRITICAL]✨** + 100 Coolness | "
                 await h.add_coolness(interaction.user.id, 100)
             else:
+                # Normal hit
                 hook = random.choice(self.hooks_data[user_class.lower()]["normal"])
-                additional_msg = ""
 
+        # Replace placeholders
         hook = hook.replace("usr1", f"**{interaction.user.display_name}**")
         hook = hook.replace("usr2", f"**{target.display_name}**")
         hook = hook.replace('bdypart', random.choice(h.body_parts))
+
+        # Send final message
         await interaction.response.send_message(additional_msg + hook)
 
     async def handle_punch(self, interaction, target, user_class):
@@ -363,14 +391,15 @@ class action_core(commands.Cog):
         is_critical = await h.crit_handler(self.bot, interaction.user, None, interaction)
         user_level = await h.get_user_level(interaction.user.id)
         reward_str = random.choice(['exp', 'gold', 'coolness'])
+        reward_value = random.randint(50, 150)
 
         # Calculate base XP based on the user's level
         if reward_str == 'exp':  # Need scaling to make this worth it as a reward.
             max_xp = h.max_xp(user_level)
             base_xp = random.randint(max_xp // 100, (max_xp // 100) * 2)  # A reasonable portion of max_xp, adjustable as needed
             reward_value = base_xp
-        else:
-            reward_value = random.randint(50, 150)
+        elif reward_str == 'gold':
+            reward_value /= 2
 
         # Adjust XP for critical hits
         if user_class == 'Criminal':
@@ -632,8 +661,8 @@ class action_core(commands.Cog):
             
             if current_shards >= 5:
                 hook = random.choice(self.hooks_data[user_class.lower()]["mega-crit"])
-                additional_msg = "**🪨[MEGA-CRIT!]🪨** + 1000 Coolness | "
-                await h.add_coolness(interaction.user.id, 1000)
+                additional_msg = "**🪨[MEGA-CRIT!]🪨** + 750 Coolness | "
+                await h.add_coolness(interaction.user.id, 750)
                 self.earth_shards[interaction.user.id] = 0
             elif is_critical:
                 hook = random.choice(self.hooks_data[user_class.lower()]["crit"])
@@ -684,9 +713,6 @@ class action_core(commands.Cog):
             ap_gain = base_ap + diminishing_ap
 
         return round(ap_gain)
-
-
-
 
 async def setup(bot):
     await bot.add_cog(action_core(bot))

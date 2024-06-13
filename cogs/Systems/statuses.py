@@ -5,13 +5,39 @@ import json
 import random
 from discord import app_commands
 import helper as h
+import signal
+import pickle
+import asyncio
 
 class statuses(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.status_effects = self.load_status_effects()
         self.user_status_effects = {}  # {user_id: {effect_name: stacks}}
+        asyncio.create_task(self.load_user_status_effects())
 
+    async def load_user_status_effects(self):
+        """Load user status effects from file."""
+        try:
+            with open('data/user_status_effects.pkl', 'rb') as file:
+                self.user_status_effects = pickle.load(file)
+        except FileNotFoundError:
+            self.user_status_effects = {}  # Initialize to empty if no file exists
+
+    async def save_user_status_effects(self):
+        """Save user status effects to file."""
+        try:
+            with open('data/user_status_effects.pkl', 'wb') as file:
+                pickle.dump(self.user_status_effects, file)
+            print(f"{self.__class__.__name__}: Variables saved successfully.")
+        except Exception as e:
+            print(f"{self.__class__.__name__}: Failed to save variables due to {e}")
+
+
+    def cog_unload(self):
+        """Handle tasks on cog unload."""
+        asyncio.create_task(self.save_user_status_effects())
+        
     def load_status_effects(self):
         with open('data/status_effect.json', 'r') as f:
             effects = json.load(f)
@@ -71,9 +97,17 @@ class statuses(commands.Cog):
         words = content.split()
         modified_words = []
         for word in words:
-            modified_words.append(word)
-            if random.random() < 0.5 and len(" ".join(modified_words)) < 1900:  # Check if adding phrase would exceed limit
-                modified_words.append(random.choice(burning_phrases))
+            word_to_add = random.choice(burning_phrases)
+            potential_addition = " ".join(modified_words + [word, word_to_add])
+            if len(potential_addition) <= 1900:
+                modified_words.append(word)
+                if random.random() < 0.5:
+                    modified_words.append(word_to_add)
+            else:
+                # If adding both exceeds the limit, check if just adding the word is okay
+                if len(" ".join(modified_words + [word])) <= 1900:
+                    modified_words.append(word)
+                break  # Stop adding any further words or phrases once we reach the limit
         return " ".join(modified_words)
 
     def apply_shatter_effect(self, content):

@@ -56,35 +56,17 @@ class owner_only(commands.Cog):
     @commands.is_owner()
     async def fquest(self, ctx, target: discord.User = None):
         if target: # message, bot, uid=None, override=False
-            await self.bot.quest_manager.fetch_random_quest(ctx.message, target.id)
+            await self.bot.quest_manager.fetch_random_quest(ctx.message, target)
         else:
             await ctx.send("Fetching a quest.")
             await self.bot.quest_manager.fetch_random_quest(ctx.message)
 
     @commands.command()
+    @commands.guild_only()
     @commands.is_owner()
-    async def force_complete(self, ctx, user: discord.Member):
-        """
-        Force completes the current quest for a specified user.
-
-        :param ctx: The command context.
-        :param user: The Discord member whose quest is to be completed.
-        """
-        user_id = user.id
-        channel_id = ctx.channel.id  # We will send the completion message to the context's channel
-        async with aiosqlite.connect('data/main.db') as conn:
-            # Fetch the current active quest for the user
-            cursor = await conn.execute("""
-                SELECT quest_id FROM user_quest_progress WHERE user_id = ?;
-            """, (user_id,))
-            result = await cursor.fetchone()
-            if result:
-                quest_id = result[0]
-                # Use the QuestManager to complete the quest
-                await self.bot.quest_manager.complete_quest(conn, user_id, quest_id, channel_id)
-                await ctx.send(f"✅ Quest for {user.display_name} has been forcefully completed.")
-            else:
-                await ctx.send("❌ No active quest found for this user.")
+    async def give_gold(self, ctx, target: discord.User = None, amount: int = 0):
+        await h.add_gold(target.id, amount)
+        await ctx.send(f"Added {amount} gold to {target.display_name}.")
 
     @commands.command()
     @commands.is_owner()

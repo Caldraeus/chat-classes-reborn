@@ -70,6 +70,8 @@ async def check_gold(user_id, required_gold):
 
     :return bool: True if the user has enough gold, False otherwise.
     """
+    if required_gold == 0:
+        return True
     async with aiosqlite.connect('data/main.db') as db:
         cursor = await db.execute("SELECT gold FROM users WHERE user_id = ?", (user_id,))
         result = await cursor.fetchone()
@@ -142,38 +144,37 @@ async def alter_ap(bot, user_id, base_ap_cost) -> None:
     user_id (str): The ID of the user whose AP is being modified.
     action_cost (int): The AP cost of the action being performed.
     """
+    if base_ap_cost == 0:
+        return
+    
    # Calculate the actual AP cost including any modifications from status effects
-    actual_ap_cost = await calculate_ap_cost(bot, user_id, base_ap_cost)
 
     # Ensure the user is initialized in the AP dictionary
     if user_id not in bot.user_aps:
         bot.user_aps[user_id] = 20  # Initialize with default AP if not previously set
 
+    actual_ap_cost = base_ap_cost
+    statuses = bot.get_cog("statuses")
+    effects_to_remove = []
+    
+    # Apply status critical hit adjustments.
+    if user_id in statuses.user_status_effects:
+        for effect, stacks in list(statuses.user_status_effects[user_id].items()):
+            if statuses.status_effects[effect].get("message", True) == False:
+                if effect == "poisoned":
+                    actual_ap_cost += 2
+                    effects_to_remove.append((effect, 1))
+                elif effect == "fatigued":
+                    actual_ap_cost += 1
+                    effects_to_remove.append((effect, 1))
+
     # Check if the user can afford the action
     if bot.user_aps[user_id] >= actual_ap_cost:
         bot.user_aps[user_id] -= actual_ap_cost  # Deduct the actual AP cost
+        for effect, stacks in effects_to_remove:
+            await statuses.remove_status_effect(user_id, effect, stacks)
     else:
         raise APError(f"You need at least {actual_ap_cost} AP to perform this action, but you only have {bot.user_aps[user_id]} AP.")
-    
-async def calculate_ap_cost(bot, user_id, base_ap_cost):
-    """
-    Calculates the completed Action Point (AP) cost for a given action.
-
-    :param bot: The bot object
-    :param user_id: The user ID to calculate the AP for.
-    :param base_ap_cost: The base cost of the action.
-    """
-    # Check if user exists in user_aps, if not and exists in DB, initialize with 20 AP
-    if user_id not in bot.user_aps:
-        # This check can be expanded to verify user existence if necessary
-        bot.user_aps[user_id] = 20  # Default AP if user exists in the DB
-
-    # Apply status effects to modify the base AP cost
-    current_ap_effects = bot.user_effects.get(user_id, [])
-    for effect in current_ap_effects:
-        pass # TODO: Implement this later.
-
-    return max(0, base_ap_cost)  # Ensure AP cost doesn't drop below 1
 
 async def crit_handler(bot, attacker_usr, defender_usr, interaction, boost=0) -> bool:
     """
@@ -194,6 +195,8 @@ async def crit_handler(bot, attacker_usr, defender_usr, interaction, boost=0) ->
     crit_min, crit_max = await handle_user_effects(bot, attacker_usr, interaction, crit_min, crit_max, "attacker")
 
     # Randomly generate a number within the critical range
+    if crit_min >= crit_max:
+        return True
     crit_result = random.randint(crit_min, crit_max)
 
     # Return None if the number rolled is 1
@@ -226,19 +229,20 @@ async def handle_user_effects(bot, user, interaction, crit_min, crit_max, role):
                 if role == 'attacker':
                     if effect == "inspired":
                         crit_min += 2  # Inspired increases minimum crit threshold
+                        effects_to_remove.append((effect, 1))
                     if effect == "ascendant":
                         crit_min = crit_max = 20  # Ascendant sets crit thresholds to maximum
-                    effects_to_remove.append((effect, 1))
+                        effects_to_remove.append((effect, 1))
                 elif role == 'defender':
                     if effect == 'embershield':
-                        amount = random.randint(100, 200)
+                        amount = random.randint(1, 100)
                         await interaction.response.send_message(f'🔥 | Your attack is blocked by **{user.mention}**\'s embershield! Owch! They gain {amount} coolness instead.')
                         await add_coolness(user.id, amount)
                         await statuses.remove_status_effect(user.id, effect, 1)
                         raise AttackBlockedError("Attack blocked by embershield.")
                     elif await get_user_class(interaction.user.id) != 'Hunter' and effect == 'marked':
                         crit_min = crit_max = 20  # Guarantee crit
-                    effects_to_remove.append((effect, 1))
+                        effects_to_remove.append((effect, 1))
 
     for effect, stacks in effects_to_remove:
         await statuses.remove_status_effect(user.id, effect, stacks)
@@ -584,9 +588,22 @@ async def add_class_specifics_to_profile(profile: discord.Embed, user, bot) -> d
         profile.add_field(name="Cinders", value=str(cinders), inline=False)
         profile.add_field(name="Pyro Level", value=str(pyro_level+20) + '°C', inline=False)
 
-    elif user_class.lower() == 'pyromancer' or user_class.lower() == 'flameborn':
+    elif user_class.lower() in ['pyromancer', 'flameborn', 'pyrokinetic']:
         pyro_level = cog.pyrolevels.get(user.id, 0)
         profile.add_field(name="Pyro Level", value=str(pyro_level+20) + '°C', inline=False)
+
+    elif user_class.lower() == 'soulcrusher':
+        souls = cog.soulcrusher_souls.get(user.id, [])
+        soul_count = len(souls)
+        soul_names = []
+        for soul_id in souls:
+            soul_user = await bot.fetch_user(soul_id)
+            if soul_user:
+                soul_names.append(soul_user.display_name)
+            else:
+                soul_names.append("an unknown user")
+        soul_names_text = ", ".join(soul_names) if soul_names else "No souls captured"
+        profile.add_field(name="Collected Souls", value=f"{soul_count} ({soul_names_text})", inline=False)
 
     # Add other classes with specific fields as needed
 
@@ -1019,7 +1036,6 @@ class QuestManager:
         elif reward_type == 'xp':
             await add_xp(user_id, reward_value)
         elif reward_type == 'item':
-            # TODO: Implement this reward value.
             pass
         elif reward_type == 'achievement':
             # TODO: implement this reward value.

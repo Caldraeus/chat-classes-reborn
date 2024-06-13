@@ -94,14 +94,14 @@ class general_commands(commands.Cog):
         embed = discord.Embed(title="Bot Diagnostic Information", colour=discord.Colour.blue())
         embed.add_field(name="Hours until Rollover", value=f"{hours}h {minutes}m\n(Local Time: {local_time})", inline=False)
         embed.add_field(name="Active Users", value=f"{active_users[0]}", inline=True)
-        embed.add_field(name="Total Gold in Circulation", value=f"{total_gold[0]}", inline=True)
-        embed.add_field(name="Total Experience Gained", value=f"{total_experience[0]}", inline=True)
-        embed.add_field(name="Total Coolness Gained", value=f"{total_coolness[0]}", inline=True)
+        embed.add_field(name="Total Gold in Circulation", value=f"{h.simplify(total_gold[0])}", inline=True)
+        embed.add_field(name="Total Experience Gained", value=f"{h.simplify(total_experience[0])}", inline=True)
+        embed.add_field(name="Total Coolness Gained", value=f"{h.simplify(total_coolness[0])}", inline=True)
         embed.add_field(name="Most Common Class", value=f"{most_common_class[0]} ({most_common_class[1]} users)", inline=True)
         embed.add_field(name="Rarest Class", value=f"{rarest_class[0]} ({rarest_class[1]} users)", inline=True)
         embed.add_field(name="Total Quests Completed", value=f"{total_quests_completed[0]}", inline=True)
-        embed.add_field(name="Average Coolness per User", value=f"{avg_coolness_per_user:.2f}", inline=True)
-        embed.add_field(name="Total Items in Circulation", value=f"{total_items[0]}", inline=True)
+        embed.add_field(name="Average Coolness per User", value=f"{h.simplify(avg_coolness_per_user)}", inline=True)
+        embed.add_field(name="Total Items in Circulation", value=f"{h.simplify(total_items[0])}", inline=True)
         embed.add_field(name="Most Popular Item", value=f"{most_popular_item[0]} ({most_popular_item[1]} in circulation)", inline=True)
         embed.add_field(name="Total Achievements Awarded", value=f"{total_achievements_awarded[0]}", inline=True)
         embed.add_field(name="Most Common Achievement", value=f"{most_common_achievement[0]} ({most_common_achievement[1]} times awarded)", inline=True)
@@ -110,13 +110,23 @@ class general_commands(commands.Cog):
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="leaderboard", description="Show the top 10 users with the highest coolness.")
+    @app_commands.choices(local_only=[
+        app_commands.Choice(name="Yes", value="yes"),
+        app_commands.Choice(name="No", value="no")
+    ])
     @app_commands.guild_only()
-    async def leaderboard(self, interaction: discord.Interaction):
+    async def leaderboard(self, interaction: discord.Interaction, local_only: str = "no"):
+        query = "SELECT user_id, coolness FROM users ORDER BY coolness DESC;"
+        if local_only == "yes":
+            # Filter to only include members in the current server
+            guild_member_ids = {member.id for member in interaction.guild.members}
+            query = f"SELECT user_id, coolness FROM users WHERE user_id IN ({','.join(map(str, guild_member_ids))}) ORDER BY coolness DESC;"
+
         async with aiosqlite.connect('data/main.db') as con:
-            async with con.execute("SELECT user_id, coolness FROM users ORDER BY coolness DESC;") as lb:
+            async with con.execute(query) as lb:
                 all_users = await lb.fetchall()
 
-        display_limit = 10
+        display_limit = 5
         final = ""
         in_top = False
         user_rank = None
@@ -124,36 +134,76 @@ class general_commands(commands.Cog):
 
         # Generate the leaderboard text
         for i, (user_id, coolness) in enumerate(all_users[:display_limit], start=1):
+            user = await self.bot.fetch_user(int(user_id))
+            if user:
+                user_line = f"#{i} - {user.display_name} — {coolness} Coolness\n\n"
+                if user.id == interaction.user.id:
+                    in_top = True
+                    user_line = f"**{user_line.strip()}**\n\n"
+                    user_rank = i
+                    user_coolness = coolness
+                final += user_line
+
+        # Add the user's own rank if they're not in the top displayed
+        if not in_top:
+            for rank, (user_id, coolness) in enumerate(all_users, start=1):
+                if user_id == interaction.user.id:
+                    user_rank = rank
+                    user_coolness = coolness
+                    break
+            if user_rank and user_rank > display_limit:
+                final += f"**.  .  .\n\n#{user_rank} - {interaction.user.display_name} — {user_coolness} Coolness**"
+
+        embed = discord.Embed(title="👑 The Coolest Kids 👑", colour=discord.Colour.gold(), description=final)
+        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/491359456337330198/733460129785184297/Funny-Dog-Wearing-Sunglasses.png")
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
+        # Granting achievements based on conditions
+        if local_only == 'no':
+            if user_rank == 1:
+                await h.grant_achievement(interaction.channel, interaction.user, 5)  # Achievement for being #1
+            if user_rank and user_rank <= 5:
+                await h.grant_achievement(interaction.channel, interaction.user, 6)  # Achievement for being top 5
+            if user_coolness and user_coolness <= -1000:
+                await h.grant_achievement(interaction.channel, interaction.user, 4)  # Achievement for coolness <= -1000
+
+    @app_commands.command(name="loserboard", description="Show the bottom 10 users with the lowest coolness.")
+    @app_commands.guild_only()
+    async def loserboard(self, interaction: discord.Interaction):
+        async with aiosqlite.connect('data/main.db') as con:
+            async with con.execute("SELECT user_id, coolness FROM users ORDER BY coolness ASC;") as lb:
+                all_users = await lb.fetchall()
+
+        display_limit = 10
+        final = ""
+        in_bottom = False
+        user_rank = None
+        user_coolness = 0
+
+        # Generate the loserboard text
+        for i, (user_id, coolness) in enumerate(all_users[:display_limit], start=1):
             user = self.bot.get_user(int(user_id))
-            user_line = f"#{i} - {(user.name if user else 'Unknown User')} - {coolness} Coolness\n\n"
+            user_line = f"#{i} - {(user.name if user else 'Unknown User')} — {coolness} Coolness\n\n"
             if user and user.id == interaction.user.id:
-                in_top = True
-                user_line = f"**{user_line.strip()}**"
+                in_bottom = True
+                user_line = f"**{user_line.strip()}**\n\n"
                 user_rank = i
                 user_coolness = coolness
             final += user_line
 
-        # Add the user's own rank if they're not in the top displayed
-        if not in_top:
+        # Add the user's own rank if they're not in the bottom displayed
+        if not in_bottom:
             for rank, (user_id, coolness) in enumerate(all_users, start=1):
                 if str(user_id) == str(interaction.user.id):
                     user_rank = rank
                     user_coolness = coolness
                     break
             if user_rank > display_limit:
-                final += f"**.  .  .\n\n#{user_rank} - {interaction.user.name} - {user_coolness} Coolness**"
+                final += f"**.  .  .\n\n#{user_rank} - {interaction.user.name} — {user_coolness} Coolness**"
 
-        embed = discord.Embed(title="👑 The Coolest Kids 👑", colour=discord.Colour.from_rgb(255, 255, 0), description=final)
-        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/491359456337330198/733460129785184297/Funny-Dog-Wearing-Sunglasses.png")
+        embed = discord.Embed(title="🔻 The Not-so-cool Kids 🔻", colour=discord.Colour.from_rgb(255, 0, 0), description=final)
+        embed.set_thumbnail(url="https://northshore-vet.com/wp-content/uploads/2016/07/saddog.jpg")
         await interaction.response.send_message(embed=embed, ephemeral=True)
-
-        # Granting achievements based on conditions
-        if user_rank == 1:
-            await h.grant_achievement(interaction.channel, interaction.user, 5)  # Achievement for being #1
-        if user_rank and user_rank <= 5:
-            await h.grant_achievement(interaction.channel, interaction.user, 6)  # Achievement for being top 5
-        if user_coolness <= -1000:
-            await h.grant_achievement(interaction.channel, interaction.user, 4)  # Achievement for coolness <= -1000
 
 # A setup function the every cog has
 async def setup(bot):

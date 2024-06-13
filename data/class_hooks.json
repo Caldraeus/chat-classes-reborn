@@ -656,5 +656,107 @@
             "Heat shimmers in the air as usr1's overheat draws the ashes of the fallen back to life, circling them as if honoring a pyromancer of old.",
             "As usr1 absorbs the lingering ash, their eyes ignite with an inner fire, signaling a peak in their mystical prowess and readiness for further combat."
         ]
-    }                            
+    },
+    "pyrokinetic": {
+        "normal": [
+            "usr1 gestures, and a thin stream of flames targets usr2's bdypart, leaving a trail of scorched earth.",
+            "With a flick of the wrist, usr1 conjures a swirling fireball that homes in on usr2, exploding on contact with their bdypart.",
+            "usr1 draws a fiery sigil in the air; moments later, a burst of flame erupts beneath usr2, scorching their bdypart.",
+            "The ground around usr1 cracks, emitting a jet of flame that snakes towards usr2, wrapping around their bdypart.",
+            "usr1 claps their hands, and a shockwave of heat ripples through the air, singeing usr2's bdypart.",
+            "With precise control, usr1 directs a series of small flames to dance around usr2, each one nipping at their bdypart.",
+            "usr1 spins, gathering flames into a vortex that rushes towards usr2, engulfing their bdypart in a fiery tornado.",
+            "A subtle nod from usr1 and the nearby campfire leaps towards usr2, forming a fiery whip that lashes their bdypart.",
+            "usr1 raises their hand, causing the flames from torches to leap and form a fiery cage around usr2, concentrating heat on their bdypart.",
+            "usr1 exhales deeply, a stream of blue flame shoots from their mouth, directly targeting and burning usr2's bdypart."
+        ],
+        "crit": [
+            "usr1 summons a colossal wave of fire from the ground, sending it crashing over usr2, engulfing their bdypart in an infernal blaze.",
+            "Chanting an arcane spell, usr1 causes the flames to intensify around usr2, suddenly exploding with force focused on their bdypart.",
+            "usr1's eyes glow a fierce orange as they invoke a meteor shower of molten rock that rains down, targeting usr2's bdypart with devastating impacts.",
+            "With a dramatic stomp, usr1 splits the earth, from which a giant pillar of fire shoots up directly under usr2, blasting their bdypart.",
+            "usr1 conjures a dragon made of pure fire that swoops down from the sky, enveloping usr2 in flames focused on their bdypart.",
+            "The air crackles as usr1 unleashes a sonic boom of heat, the shockwave hitting usr2 with enough intensity to char their bdypart.",
+            "usr1 sketches an ancient rune in the air; it ignites into a blazing sun that hovers over usr2, radiating extreme heat onto their bdypart.",
+            "In a display of raw power, usr1 creates a ring of fire that tightens around usr2, compressing with intense heat on their bdypart.",
+            "usr1 points at usr2, and a bolt of fire zips from their fingertip, zigzagging through the air before striking usr2's bdypart with lethal precision.",
+            "With a flourish, usr1 fans the air, manipulating the ambient heat to form a scorching wind that sears usr2's bdypart."
+        ],
+        "overheat": [
+            "Overheating, usr1's body emits a radiant heat, causing nearby flammable materials to spontaneously ignite, enhancing their fiery aura.",
+            "The ground beneath usr1 becomes molten, their overheat causing flames to burst forth randomly, hitting near usr2 with increased ferocity.",
+            "usr1's overheat condition unleashes a protective flame barrier around them, burning anyone who comes too close, including targeted strikes at usr2's bdypart.",
+            "As usr1 channels too much heat, they release a pulse of energy that sets the surrounding air ablaze, increasing the effectiveness of their next attack.",
+            "The intense heat accumulating within usr1 causes their next spell to double in size, sending a massive firestorm towards usr2's bdypart.",
+            "Unable to contain the power, usr1's overheat results in explosive fireballs that scatter around, each seeking usr2's bdypart.",
+            "The overheat enhances usr1's control over fire, allowing them to direct multiple streams of flame simultaneously at usr2's bdypart.",
+            "usr1's excess heat turns into a blinding flash of light that temporarily disorients usr2 while causing continuous fire damage.",
+            "During overheat, usr1 generates a fiery shockwave that radiates outwards, dealing damage over a wide area, focusing especially on usr2's bdypart.",
+            "The build-up of heat allows usr1 to momentarily summon a phoenix from the ashes, which performs a fiery dive attack on usr2's bdypart."
+        ]
+    },
+    "toxinmancer": {
+        "normal": [
+            "usr1 flicks their wrist, sending a spray of toxic mist towards usr2, lightly coating their bdypart with venom.",
+            "With a whispered incantation, usr1 conjures a cloud of noxious gas that envelops usr2, irritating their bdypart.",
+            "usr1 throws a concocted vial at the ground near usr2; it shatters, releasing a creeping fog of toxin that grazes their bdypart.",
+            "The air around usr1 shimmers with a sickly green hue as they direct a stream of poison towards usr2, making contact with their bdypart.",
+            "usr1 plants a toxic trap on the ground; as usr2 approaches, it activates, puffing out a cloud of poison at their bdypart.",
+            "With a snap of their fingers, usr1 causes thorny vines to burst from the ground, each thorn dripping with toxin, nicking usr2's bdypart.",
+            "usr1 draws a circle in the dirt, and as usr2 crosses it, a burst of spores erupts, targeting their bdypart with hallucinogenic particles.",
+            "The ground beneath usr2's feet becomes slick with a poisonous slime as usr1 manipulates the earth, causing minor burns to their bdypart.",
+            "usr1's eyes flash a toxic green as they exhale a breath of venomous air, subtly poisoning usr2's bdypart.",
+            "A gesture from usr1 summons a swarm of insects from nearby, each carrying a potent toxin that bites at usr2's bdypart."
+        ],
+        "crit": [
+            "usr1 chants darkly, enhancing the toxicity of their spell; a massive wave of venom crashes over usr2, severely poisoning their bdypart and debilitating them.",
+            "With a forceful clap, usr1 merges clouds of poison into a dense, dripping fog that descends on usr2, badly poisoning their bdypart and slowing their movements dramatically.",
+            "usr1's mastery over toxins culminates in a targeted blast of corrosive acid, which eats away at usr2's bdypart, causing intense pain and lasting injury.",
+            "A sinister laugh escapes usr1 as they direct a concentrated beam of toxin towards usr2, which penetrates deep into their system, causing severe internal poisoning.",
+            "usr1 conjures a spectral serpent made of poison that lashes out at usr2, biting their bdypart with a venom that spreads crippling pain and weakness.",
+            "In a display of toxic prowess, usr1 causes the plants around usr2 to exude a deadly poison, which leeches into their bdypart, causing severe nausea and disorientation.",
+            "usr1 spins, gathering a whirlwind of toxic spores around them; the whirlwind envelops usr2, badly poisoning their bdypart and reducing their stamina.",
+            "usr1 raises their hand, from which a dark ooze flows forth, forming tendrils that wrap around usr2, infusing their bdypart with a debilitating toxin.",
+            "With precise control, usr1 sends several quick darts of poison flying towards usr2, each hitting their bdypart and causing acute poisoning that weakens them significantly.",
+            "usr1 performs a ritual dance, calling forth rain from above; however, the droplets are toxic, soaking usr2 and badly poisoning their bdypart, causing fever and delirium."
+        ]
+    },
+    "soulcrusher": {
+        "normal": [
+            "usr1 casts a shadowy tendril that wraps around usr2, lightly sapping energy from their bdypart.",
+            "With a chilling chant, usr1 summons a ghostly hand that clutches at usr2, leaving their bdypart feeling numb.",
+            "usr1 flicks their hand, sending a burst of dark energy towards usr2, which grazes their bdypart with a cold, weakening touch.",
+            "The ground beneath usr2 darkens as usr1 directs a soul-sapping mist to rise and swirl around their bdypart, draining their energy.",
+            "usr1's eyes glow with a dark power as they project a spectral beam that momentarily touches usr2's bdypart, inducing fear.",
+            "With a sinister whisper, usr1 causes ethereal chains to bind usr2 momentarily, tugging at the essence of their bdypart.",
+            "usr1 draws a sigil in the air that glows ominously before sending a wave of despair towards usr2, slightly darkening their bdypart.",
+            "The air around usr2 chills as usr1 directs a cold breeze that steals warmth from their bdypart, leaving it pale and drained.",
+            "usr1 mutters an incantation, causing the shadows to move towards usr2, lightly clawing at their bdypart with a spectral touch.",
+            "With a subtle gesture, usr1 sends a pulse of dark energy that causes usr2's bdypart to tremble, weakened by an unseen force."
+        ],
+        "crit": [
+            "usr1 raises their arms, and a vortex of soul-stealing winds envelops usr2, directly pulling at the essence of their bdypart, stealing their soul piece by piece.",
+            "With a powerful roar, usr1 summons a storm of dark spirits that swarm around usr2, each spirit latching onto their bdypart and stealing fragments of their soul.",
+            "usr1 channels a deep darkness, focusing it into a beam that strikes usr2's bdypart, piercing through and locking onto their soul to slowly drain it away.",
+            "In an eerie silence, usr1's eyes darken as they extend a hand, drawing the soul from usr2's bdypart, leaving it visibly dimmer and hollow.",
+            "usr1 performs a dark ritual, causing the ground beneath usr2 to crack, from which a hand of despair grips their bdypart, pulling at their soul aggressively.",
+            "usr1 conjures a spectral hand that reaches deep into usr2, clutching their soul and extracting it painfully from their bdypart.",
+            "With a sinister laugh, usr1 manipulates the shadows around usr2, each one binding to their bdypart and siphoning off pieces of their soul.",
+            "usr1 whispers an ancient curse, causing dark energy to wrap around usr2's bdypart, extracting their soul with unbearable agony.",
+            "usr1's gaze pierces through usr2, and a dark thread of power connects them, slowly drawing the soul out of usr2's bdypart.",
+            "A dark cloud forms above usr2 as usr1 channels their power, from which tendrils descend, wrapping around usr2 and stealing their soul shard by shard."
+        ],
+        "soulcrush": [
+            "With usr2's soul fragments in their grasp, usr1 crushes them mercilessly, causing an explosion of dark energy that devastates usr2's essence.",
+            "usr1 closes their hand tightly over the stolen soul pieces, and as they crush them, usr2 feels an intense, soul-deep pain radiating from their bdypart.",
+            "The soul fragments are compressed by usr1 into a dark crystal, which shatters violently, sending shards of agonizing energy through usr2's soul.",
+            "usr1 performs a dark chant, and as they finalize the spell, usr2's soul fragments are obliterated, causing unbearable despair in usr2.",
+            "usr1 tosses the captured soul fragments into the air, then smashes them with a wave of dark power, causing shockwaves of pain to echo through usr2's being.",
+            "With a cold smile, usr1 grinds the soul fragments into dust between their palms, and usr2 experiences a loss of vitality as their essence is diminished.",
+            "usr1 absorbs the soul fragments into their own being and then expels them as a burst of dark energy, annihilating the remnants of usr2's soul.",
+            "The soul fragments are bound into a dark orb by usr1, which they then crush underfoot, causing usr2 to stagger under the weight of their crushed soul.",
+            "usr1 channels the soul fragments into a vortex of dark energy, compressing them until they implode, sending a shock of soul-crushing agony through usr2.",
+            "usr1 casts the soul fragments into a dark abyss formed beneath their feet; as the fragments are annihilated, usr2 feels parts of their essence being torn away."
+        ]
+    }                   
 }

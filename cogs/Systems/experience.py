@@ -19,6 +19,7 @@ import os
 import requests
 from PIL import Image, ImageOps
 from io import BytesIO
+import pickle
 
 class experience(commands.Cog):
     def __init__(self, bot):
@@ -26,6 +27,39 @@ class experience(commands.Cog):
         self.user_streaks = {}
         self.last_message_time = {}
         self.notified = []
+
+        self.variables_to_save = {
+            'notified': []
+        }
+
+        # Load state variables asynchronously and setup defaults
+        asyncio.create_task(self.load_and_initialize_variables())
+
+    async def load_and_initialize_variables(self):
+        try:
+            with open('data/experience_state.pkl', 'rb') as file:
+                data = pickle.load(file)
+                for key in self.variables_to_save:
+                    setattr(self, key, data.get(key, self.variables_to_save[key]))
+        except FileNotFoundError:
+            self.set_default_values()
+
+    def set_default_values(self):
+        self.notified = []
+
+    async def save_variables(self):
+        try:
+            data = {key: getattr(self, key) for key in self.variables_to_save}
+            with open('data/experience_state.pkl', 'wb') as file:
+                pickle.dump(data, file)
+            print(f"{self.__class__.__name__}: Variables saved successfully.")
+        except Exception as e:
+            print(f"{self.__class__.__name__}: Failed to save variables due to {e}")
+
+    def cog_unload(self):
+        """Handle tasks on cog unload."""
+        asyncio.create_task(self.save_variables())
+
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
