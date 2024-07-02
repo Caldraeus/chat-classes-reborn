@@ -7,7 +7,7 @@ import pickle
 import asyncio
 import signal
 
-class economy(commands.Cog):
+class rollover(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.variables_to_save = {
@@ -45,6 +45,8 @@ class economy(commands.Cog):
         class_cog = self.bot.get_cog('action_core')
         if class_cog:
             class_cog.nomad_homes.clear()
+            class_cog.soulcrusher_souls.clear()
+            class_cog.hired.clear()
 
     @tasks.loop(hours=24)
     async def rollover_task(self):
@@ -99,4 +101,4 @@ class economy(commands.Cog):
             self.update_status.start()
 
 async def setup(bot):
-    await bot.add_cog(economy(bot))
+    await bot.add_cog(rollover(bot))

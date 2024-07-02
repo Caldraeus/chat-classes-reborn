@@ -338,11 +338,11 @@ class items_and_inventory(commands.Cog):
             if is_scammed:
                 await interaction.response.send_message(f"🐒 | You take your NFT and... oh shit, you got scammed! You lose {amount} G.\n\nAnd for even trying to use an NFT, you also lose that same amount in coolness. Bummer, dude!")
                 await h.add_gold(interaction.user.id, -amount)
-                await h.add_coolness(interaction.user.id, -amount)
+                await h.add_coolness(self.bot, interaction.user.id, -amount)
             else:
                 await interaction.response.send_message(f"🐒 | You take your NFT and... do whatever people do with NFT's! It's a success! You gain {amount} G.\n\nBut honestly? NFT's suck. That's why you just lost that same amount in coolness.")
                 await h.add_gold(interaction.user.id, amount)
-                await h.add_coolness(interaction.user.id, -amount)
+                await h.add_coolness(self.bot, interaction.user.id, -amount)
             await h.remove_item(interaction.user.id, item_id)
         elif item_name == "World War II Souvenir":
             
@@ -352,11 +352,11 @@ class items_and_inventory(commands.Cog):
 
             if exploded:
                 await interaction.response.send_message(f"💥 | You take out your World War II Souvenir and... oh, fuck this has been a bomb the whole time? Your souvenir explodes! You live, but that explosion was not cool, man. You lose {amount*3} coolness.")
-                await h.add_coolness(interaction.user.id, -amount*3)
+                await h.add_coolness(self.bot, interaction.user.id, -amount*3)
                 await h.remove_item(interaction.user.id, item_id)
             else:
                 await interaction.response.send_message(f"💣 | You take your World War II Souvenir out and show it off. Wow! That's pretty cool, especially the soft ticking noise! You put your souvenir back into your pocket for later. (**+{amount} Coolness!**)")
-                await h.add_coolness(interaction.user.id, amount)
+                await h.add_coolness(self.bot, interaction.user.id, amount)
 
     # Example method for an item requiring a target
     async def use_targeted_item(self, interaction, item_name):

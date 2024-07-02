@@ -33,7 +33,6 @@ class statuses(commands.Cog):
         except Exception as e:
             print(f"{self.__class__.__name__}: Failed to save variables due to {e}")
 
-
     def cog_unload(self):
         """Handle tasks on cog unload."""
         asyncio.create_task(self.save_user_status_effects())
@@ -61,6 +60,40 @@ class statuses(commands.Cog):
                 del self.user_status_effects[user_id][effect_name]
             if not self.user_status_effects[user_id]:
                 del self.user_status_effects[user_id]
+
+    async def remove_all_positive_statuses(self, user_id):
+        """Removes all positive status effects from a user."""
+        if user_id in self.user_status_effects:
+            positive_effects = [effect for effect in self.user_status_effects[user_id] if self.status_effects[effect]['positive']]
+            for effect in positive_effects:
+                del self.user_status_effects[user_id][effect]
+            if not self.user_status_effects[user_id]:
+                del self.user_status_effects[user_id]
+            await self.save_user_status_effects()
+
+    async def remove_all_negative_statuses(self, user_id):
+        """Removes all negative status effects from a user."""
+        if user_id in self.user_status_effects:
+            negative_effects = [effect for effect in self.user_status_effects[user_id] if not self.status_effects[effect]['positive']]
+            for effect in negative_effects:
+                del self.user_status_effects[user_id][effect]
+            if not self.user_status_effects[user_id]:
+                del self.user_status_effects[user_id]
+            await self.save_user_status_effects()
+
+    async def get_random_status_effect_from_user(self, user_id):
+        """Gets a random status effect that the user has and returns it along with the stack count."""
+        if user_id in self.user_status_effects and self.user_status_effects[user_id]:
+            effect, stacks = random.choice(list(self.user_status_effects[user_id].items()))
+            return effect, stacks
+        return None, 0
+    
+    async def get_status_effect_positive_or_negative(self, effect_name):
+        """Determines if a status effect is positive or negative."""
+        effect_name = effect_name.lower()  # Normalize to lowercase
+        if effect_name in self.status_effects:
+            return self.status_effects[effect_name]['positive']
+        return None
 
     async def handle_message_effects(self, message):
         user_id = message.author.id

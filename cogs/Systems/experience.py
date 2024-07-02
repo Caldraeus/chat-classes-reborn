@@ -60,7 +60,6 @@ class experience(commands.Cog):
         """Handle tasks on cog unload."""
         asyncio.create_task(self.save_variables())
 
-
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if message.author.bot or not message.guild:

@@ -38,5 +38,15 @@
         "positive":false,
         "message":false,
         "description":"You're feeling really tired... your next action cost 1 extra AP."
+    },
+    "blinded":{
+        "positive":false,
+        "message":false,
+        "description":"Something is in your eyes! Your critical chance is halved."
+    },
+    "spirit shroud":{
+        "positive":true,
+        "message":false,
+        "description":"You are protected by the spirit realm! People will have a harder time scoring a critical on you."
     }
 }

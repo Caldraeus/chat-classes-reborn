@@ -202,7 +202,7 @@ class general_commands(commands.Cog):
                 final += f"**.  .  .\n\n#{user_rank} - {interaction.user.name} — {user_coolness} Coolness**"
 
         embed = discord.Embed(title="🔻 The Not-so-cool Kids 🔻", colour=discord.Colour.from_rgb(255, 0, 0), description=final)
-        embed.set_thumbnail(url="https://northshore-vet.com/wp-content/uploads/2016/07/saddog.jpg")
+        embed.set_thumbnail(url="https://i.imgur.com/ltc5F7U.jpeg")
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
 # A setup function the every cog has

@@ -29,6 +29,21 @@ class AttackBlockedError(Exception):
         self.message = message
         super().__init__(self.message)
 
+async def calculate_coolness(bot, user_id, base_amount):
+    return base_amount
+
+async def get_user_level(user_id):
+    """
+    Fetch a user's current level.
+
+    :param user_id: The user's ID.
+    :return int: The user's level.
+    """
+    async with aiosqlite.connect('data/main.db') as conn:
+        cursor = await conn.execute("SELECT level FROM users WHERE user_id = ?", (user_id,))
+        lvl = await cursor.fetchone()
+    return lvl
+
 async def get_user_inventory(user_id):
     """Fetches the user's inventory from the database including item names."""
     async with aiosqlite.connect('data/main.db') as db:
@@ -41,25 +56,6 @@ async def get_user_inventory(user_id):
         """, (user_id,))
         inventory = await cursor.fetchall()
         return inventory
-
-async def deduct_ap(bot, user_id, ap_value):
-    """
-    Deducts the given AP value from the user's AP and sets it to zero if it goes negative.
-
-    :param bot: The instance of the bot accessing this function.
-    :param user_id: The ID of the user whose AP is being modified.
-    :param ap_value: The amount of AP to deduct.
-    """
-    # Ensure the user is initialized in the AP dictionary
-    if user_id not in bot.user_aps:
-        return
-    
-    # Deduct the AP value
-    bot.user_aps[user_id] -= ap_value
-
-    # Ensure AP does not go negative
-    if bot.user_aps[user_id] < 0:
-        bot.user_aps[user_id] = 0
 
 async def check_gold(user_id, required_gold):
     """
@@ -175,6 +171,52 @@ async def alter_ap(bot, user_id, base_ap_cost) -> None:
             await statuses.remove_status_effect(user_id, effect, stacks)
     else:
         raise APError(f"You need at least {actual_ap_cost} AP to perform this action, but you only have {bot.user_aps[user_id]} AP.")
+    
+async def deduct_ap(bot, user_id, ap_value):
+    """
+    Deducts the given AP value from the user's AP and sets it to zero if it goes negative. This is not to be used
+    for things that "cost" AP - this is a more raw version. Use alter_ap for action costs and things that are subject
+    to status effects.
+
+    :param bot: The instance of the bot accessing this function.
+    :param user_id: The ID of the user whose AP is being modified.
+    :param ap_value: The amount of AP to deduct.
+    """
+    # Ensure the user is initialized in the AP dictionary
+    if user_id not in bot.user_aps:
+        return
+    
+    # Deduct the AP value
+    bot.user_aps[user_id] -= ap_value
+
+    # Ensure AP does not go negative
+    if bot.user_aps[user_id] < 0:
+        bot.user_aps[user_id] = 0
+
+async def add_ap(bot, user_id, ap_amount):
+    """
+    Adds action points to the specified user. This function handles its own database connection.
+    It does not accept negative values for AP, as of right now.
+
+    :param user_id: ID of the user.
+    :param ap_amount: Amount of action points to add, must be non-negative.
+    """
+    if not await user_exists(user_id):
+        # Exit if user does not exist.
+        return
+    bot.user_aps[user_id] += ap_amount
+
+async def set_ap(bot, user_id, ap_amount):
+    """
+    Sets the action points of the specified user.
+
+    :param user_id: ID of the user.
+    :param ap_amount: Amount of action points to hard-set to.
+    """
+    if not await user_exists(user_id):
+        # Exit if user does not exist.
+        return
+    bot.user_aps[user_id] = ap_amount
 
 async def crit_handler(bot, attacker_usr, defender_usr, interaction, boost=0) -> bool:
     """
@@ -183,14 +225,43 @@ async def crit_handler(bot, attacker_usr, defender_usr, interaction, boost=0) ->
     :param bot: The instance of the bot accessing this function.
     :param attacker_usr (discord.Member): The user performing the attack.
     :param defender_usr (discord.Member): The user defending against the attack.
-    :param channel (discord.Channel): The channel where the attack takes place.
+    :param interaction: The interaction context.
     :param boost (int): Initial modification to critical chance (default 0).
     :return: True if a critical hit occurs, False if not, None if the roll is 1.
     """
+    # Initialize critical hit range
     crit_max = 20  # Maximum range for critical hit roll
-    crit_min = 1 # The minimum result for a critical hit roll.
+    crit_min = 1  # The minimum result for a critical hit roll.
 
-    # Handle status effects from attacker.
+    # Get the action_core cog to access the hired sellswords data
+    action_core_cog = bot.get_cog("action_core")
+    hired_sellswords = action_core_cog.hired if action_core_cog else {}
+
+    # Handle Sellsword logic
+    if attacker_usr.id in hired_sellswords:
+        client_id = hired_sellswords[attacker_usr.id]
+        if defender_usr.id == client_id:
+            await interaction.response.send_message("You cannot attack your client. Attack cancelled and AP refunded.", ephemeral=True)
+            await add_ap(bot, attacker_usr.id, 1)
+            return False
+
+    if defender_usr.id in hired_sellswords.values():
+        sellsword_id = [k for k, v in hired_sellswords.items() if v == defender_usr.id][0]
+        sellsword = await bot.fetch_user(sellsword_id)
+        await interaction.response.send_message(
+            f"**{sellsword.display_name}** interrupts the attack to protect their client! **{sellsword.display_name}** gains 100 coolness instead.",
+            ephemeral=False
+        )
+        await add_coolness(bot, sellsword_id, 100)
+        raise AttackBlockedError("Sellsword blocked.")
+    
+    # Break the pact if the client attacks their Sellsword
+    if defender_usr.id in hired_sellswords and hired_sellswords[defender_usr.id] == attacker_usr.id:
+        del hired_sellswords[defender_usr.id]
+        await interaction.response.send_message("You have broken your pact with your Sellsword by attacking them! They totally saw this coming, too, because they block your attack!", ephemeral=False)
+        raise AttackBlockedError("Sellsword blocked.")
+
+    # Handle status effects from attacker and defender
     crit_min, crit_max = await handle_user_effects(bot, defender_usr, interaction, crit_min, crit_max, "defender") if defender_usr else (crit_min, crit_max)
     crit_min, crit_max = await handle_user_effects(bot, attacker_usr, interaction, crit_min, crit_max, "attacker")
 
@@ -205,6 +276,7 @@ async def crit_handler(bot, attacker_usr, defender_usr, interaction, boost=0) ->
 
     # Calculate the final crit chance by checking if the rolled number is within the threshold
     crit_thresh = crit_max - boost  # Base threshold for a critical hit, adjusted by any boost
+    print(f"CritMin: {crit_min} / CritMax: {crit_max} / CritThresh: {crit_thresh} / CritResult: {crit_result} / Boost: {boost}")
     return crit_result >= crit_thresh
 
 async def handle_user_effects(bot, user, interaction, crit_min, crit_max, role):
@@ -230,25 +302,30 @@ async def handle_user_effects(bot, user, interaction, crit_min, crit_max, role):
                     if effect == "inspired":
                         crit_min += 2  # Inspired increases minimum crit threshold
                         effects_to_remove.append((effect, 1))
-                    if effect == "ascendant":
+                    elif effect == "blinded":
+                        crit_max *= 2  # Blinded raises crit_max by double
+                        effects_to_remove.append((effect, 1))
+                    elif effect == "ascendant":
                         crit_min = crit_max = 20  # Ascendant sets crit thresholds to maximum
                         effects_to_remove.append((effect, 1))
                 elif role == 'defender':
                     if effect == 'embershield':
                         amount = random.randint(1, 100)
                         await interaction.response.send_message(f'🔥 | Your attack is blocked by **{user.mention}**\'s embershield! Owch! They gain {amount} coolness instead.')
-                        await add_coolness(user.id, amount)
+                        await add_coolness(bot, user.id, amount)
                         await statuses.remove_status_effect(user.id, effect, 1)
                         raise AttackBlockedError("Attack blocked by embershield.")
                     elif await get_user_class(interaction.user.id) != 'Hunter' and effect == 'marked':
                         crit_min = crit_max = 20  # Guarantee crit
+                        effects_to_remove.append((effect, 1))
+                    elif effect == "spirit shroud":
+                        crit_max += 5  # Spirit shroud increases crit_max by 5
                         effects_to_remove.append((effect, 1))
 
     for effect, stacks in effects_to_remove:
         await statuses.remove_status_effect(user.id, effect, stacks)
 
     return crit_min, crit_max
-
 
 async def get_user_class(user_id):
     async with aiosqlite.connect('data/main.db') as db:
@@ -665,13 +742,14 @@ def hash_class_name_to_rgb(class_name: str) -> tuple:
 
     return (r, g, b)
 
-async def add_coolness(user_id, coolness_amount):
+async def add_coolness(bot, user_id, coolness_amount):
     """
     Adds coolness to the specified user. This function handles its own database connection.
 
     :param user_id: ID of the user.
     :param coolness_amount: Amount of coolness to add.
     """
+    coolness_amount = await calculate_coolness(bot, user_id, coolness_amount)
     if not await user_exists(user_id):
         # Exit if user does not exist.
         return
@@ -760,31 +838,6 @@ def format_user_list(users):
         return f"{user_names[0]} and {user_names[1]}"
     else:
         return ', '.join(user_names[:-1]) + f", and {user_names[-1]}"
-
-async def add_ap(bot, user_id, ap_amount):
-    """
-    Adds action points to the specified user. This function handles its own database connection.
-    It does not accept negative values for AP, as of right now.
-
-    :param user_id: ID of the user.
-    :param ap_amount: Amount of action points to add, must be non-negative.
-    """
-    if not await user_exists(user_id):
-        # Exit if user does not exist.
-        return
-    bot.user_aps[user_id] += ap_amount
-
-async def set_ap(bot, user_id, ap_amount):
-    """
-    Sets the action points of the specified user.
-
-    :param user_id: ID of the user.
-    :param ap_amount: Amount of action points to hard-set to.
-    """
-    if not await user_exists(user_id):
-        # Exit if user does not exist.
-        return
-    bot.user_aps[user_id] = ap_amount
 
 async def find_origin(user_class):
     """
@@ -1030,7 +1083,7 @@ class QuestManager:
 
         # Now handle user rewards outside the database connection
         if reward_type == 'coolness':
-            await add_coolness(user_id, reward_value)
+            await add_coolness(self.bot, user_id, reward_value)
         elif reward_type == 'gold':
             await add_gold(user_id, reward_value)
         elif reward_type == 'xp':
